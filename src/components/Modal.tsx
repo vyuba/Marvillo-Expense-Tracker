@@ -1,4 +1,8 @@
-function Modal({ loading, setLoading }) {
+interface ModalProps {
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+function Modal({ loading }: ModalProps) {
   return (
     <div
       className={`fixed transition-transform duration-500 ease-in-out ${
