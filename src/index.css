@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-family: "DM Sans", "inter";
+  font-family: var(--font-family);
+  --primary-color: #03040b; /* Primary brand color */
+  --secondary-color: #1f1e1e; /* Secondary brand color */
+  --accent-color: #9e56ff; /* Accent or highlight color */
+  --background-color: #080808; /* Background */
+  --text-color: #fffff; /* Primary text */
+  --text-secondary-color: #e6e6e6; /* Primary text */
+  --border-color: #fffff; /* Borders */
+  --error-bg-color: #561010; /* Error or danger */
+  --error-border-color: #b50000; /* Error or danger */
+  --error-info-color: #d1a1a1; /* Informational messages */
+  --success-bg-color: #083a0c; /* Success */
+  --success-border-color: #0f8717; /* Success */
+  --success-info-color: #c3e3c5; /* Informational messages */
+  --warning-color: #facc15; /* Warning */
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
