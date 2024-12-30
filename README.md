@@ -1,4 +1,4 @@
-# React + TypeScript + Vite
+<!-- # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
@@ -47,5 +47,49 @@ export default tseslint.config({
     ...react.configs['jsx-runtime'].rules,
   },
 })
-```
-# Marvillo-Expense-Tracker
+``` -->
+
+# Marvillo Expense Tracker
+
+**Marvillo Expense Tracker** is a web application built using **React**, **React Router**, **Tailwind CSS**, **Lucide Dev** for icons, and **Appwrite** for backend services.
+
+## Purpose
+
+The primary goal of this web app is to help users **track their expenses and income** efficiently. It is currently a work in progress, with several features planned for future updates.
+
+## Current Features
+
+- **Sign up and Login**:
+  - Google account integration for easy sign-up and login.
+  - Manual sign-up and login for users who prefer not to use Google.
+- **Expense and Income Tracking**:
+
+  - A form to input both income and expense data.
+  - Data is displayed in a user-friendly table format for easy tracking.
+
+- **Bank Integration**:
+  - Users can input bank details.
+  - Display bank information in the app for easier management.
+
+## Upcoming Features
+
+- Enhanced bank integration.
+- Advanced reporting and data visualization tools.
+- User profiles and customizable settings.
+
+## Technologies Used
+
+- **React** for building the user interface.
+- **React Router** for navigation between pages.
+- **Tailwind CSS** for fast and responsive styling.
+- **Lucide Dev** for UI icons.
+- **Appwrite** for backend services including authentication and database management.
+
+## Installation
+
+To run the project locally:
+
+1. Clone this repository:
+   ```bash
+   git clone git@github.com:vyuba/Marvillo-Expense-Tracker.git
+   ```
