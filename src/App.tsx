@@ -7,11 +7,12 @@ import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import SideBar from "./components/Siderbar";
 import Bank from "./pages/Bank";
-import ComingSoon from "./pages/ComingSoon";
+// import ComingSoon from "./pages/ComingSoon";
 import IncomePage from "./pages/IncomePage";
 import ExpensePage from "./pages/ExpensePage";
 import { InteractionProvider } from "./context/interactionContext";
 import Navbar from "./components/Navbar";
+import Profile from "./pages/Profile";
 // import Profile from "./pages/Profile";
 
 const App = () => {
@@ -69,7 +70,7 @@ const App = () => {
                       <Route path="bank" element={<Bank />} />
                       <Route path="/income" element={<IncomePage />} />
                       <Route path="/expense" element={<ExpensePage />} />
-                      <Route path="/profile" element={<ComingSoon />} />
+                      <Route path="/profile" element={<Profile />} />
                     </Routes>
                   </InteractionProvider>
                 </div>

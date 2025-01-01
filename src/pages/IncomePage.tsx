@@ -198,7 +198,9 @@ function IncomePage() {
                         <td className="px-4 py-2 ">{data.$id}</td>
                         <td className="px-4 py-2 ">{data.type}</td>
                         <td className="px-4 py-2 ">{data.category}</td>
-                        <td className="px-4 py-2 ">{data.Date}</td>
+                        <td className="px-4 py-2 ">
+                          {data.$createdAt.split("T")[0]}
+                        </td>
                         <td className="px-4 py-2 ">{data.amount}</td>
                         <td
                           onClick={() => {

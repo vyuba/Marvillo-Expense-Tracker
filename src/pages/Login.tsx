@@ -17,7 +17,6 @@ function Login() {
   } = useAppContext();
 
   const navigate = useNavigate();
-
   async function login(email: string, password: string) {
     setLoading(true);
     await account.createEmailPasswordSession(email, password);

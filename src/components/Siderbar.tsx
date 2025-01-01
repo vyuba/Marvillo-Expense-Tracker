@@ -1,6 +1,7 @@
 import {
   CommandIcon,
   CreditCard,
+  Ellipsis,
   LucideHome,
   LucideTicketMinus,
   PiggyBankIcon,
@@ -11,6 +12,7 @@ import { account } from "../lib/appwrite";
 import { useAppContext } from "../context/AppContext";
 import { useNavigate, NavLink } from "react-router";
 import toast from "react-hot-toast";
+import { useState } from "react";
 
 interface SideBarProps {
   activeNavbar: boolean;
@@ -19,6 +21,7 @@ interface SideBarProps {
 
 function SideBar({ activeNavbar, setActiveNavbar }: SideBarProps) {
   const { loggedInUser, setLoggedInUser } = useAppContext();
+  const [editName, setEditName] = useState(false);
   const navigate = useNavigate();
   const Navlinks = [
     { name: "home", link: "/dashboard/home", icon: <LucideHome /> },
@@ -29,18 +32,12 @@ function SideBar({ activeNavbar, setActiveNavbar }: SideBarProps) {
       link: "/dashboard/expense",
       icon: <LucideTicketMinus />,
     },
-    // { name: "Taxes", link: "/profile", icon: <HistoryIcon /> },
   ];
-
-  // const [sidebar, setSidebar] = useState(true);
-  // const handleSidebarShrink = () => {
-  //   setSidebar(!sidebar);
-  // };
 
   console.log(loggedInUser);
   return (
     <nav
-      className={`bg-[#0d0d0d] md:w-[270px] fixed md:static inset-0 flex  p-4 z-50 transition-all flex-col justify-between md:translate-x-0 ${
+      className={`bg-[#0d0d0d] md:w-[300px] fixed md:static inset-0 flex  p-4 z-50 transition-all flex-col justify-between md:translate-x-0 ${
         activeNavbar ? "translate-x-0" : "-translate-x-full"
       }`}
     >
@@ -97,23 +94,46 @@ function SideBar({ activeNavbar, setActiveNavbar }: SideBarProps) {
               : "bg-transparent text-[#4f4e4e]"
           }
           to={"/dashboard/profile"}
-          //
         >
           <li className=" mb-4 w-full py-4 px-3 rounded-lg items-center gap-2 flex flex-row capitalize font-bold">
             <UserSquareIcon />
             <span>profile</span>
           </li>
         </NavLink>
-        <li className="bg-[#121212] w-full py-4 px-3 rounded-lg items-center gap-2 flex flex-row">
-          <div className="rounded-full w-8 h-8 bg-black "></div>
-          <div className="flex flex-col capitalize">
+        <li className="bg-[#121212] w-full relative py-4 px-3 rounded-lg items-center gap-2 flex flex-row">
+          <div className=" capitalize w-full">
             {loggedInUser ? (
-              <div className="w-full">
-                <div className="flex flex-row w-full justify-between items-center">
-                  <span className="text-white font-semibold text-sm">
-                    {loggedInUser?.name}
-                    New User
+              <div className="w-full  flex items-center justify-between">
+                <div
+                  className={`absolute transition-all  ${
+                    editName
+                      ? "flex h-fit transition-all"
+                      : "hidden h-0 transition-all"
+                  } overflow-hidden bottom-28 left-0 w-full bg-[#121212] flex-col gap-2 p-4 rounded-md`}
+                >
+                  edit username
+                  <input
+                    className="outline-none bg-transparent border-b border-accent"
+                    type="text"
+                    placeholder="username"
+                  />
+                  <button className="capitalize">submit</button>
+                </div>
+                <div className="flex flex-col w-full ">
+                  <div className="flex flex-row w-full gap-8 items-center">
+                    <span className="text-white font-semibold text-sm">
+                      {loggedInUser?.name === "" ? "User" : loggedInUser?.name}
+                    </span>
+                  </div>
+                  <span className="text-xs text-white font-light">
+                    {loggedInUser?.email}
                   </span>
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <Ellipsis
+                    onClick={() => setEditName(!editName)}
+                    className="bg-secondary rounded-md size-7 p-1 cursor-pointer"
+                  />
                   <button
                     type="button"
                     className="text-accent font-medium"
@@ -147,9 +167,6 @@ function SideBar({ activeNavbar, setActiveNavbar }: SideBarProps) {
                     Logout
                   </button>
                 </div>
-                <span className="text-xs text-white font-light">
-                  {loggedInUser?.email}
-                </span>
               </div>
             ) : (
               <a className="text-accent font-semibold" href="/">
