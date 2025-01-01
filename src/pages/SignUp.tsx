@@ -42,9 +42,9 @@ function SignUp() {
   }
 
   const createAccount = async () => {
-    toast.loading("Creating account...");
     setLoading(true);
     try {
+      toast.loading("Creating account...");
       await account.create(ID.unique(), email, password);
       // const user = await account.get();
       const { user } = await login(email, password);
@@ -55,11 +55,12 @@ function SignUp() {
         { email: email }
       );
       setLoading(false);
+      toast.dismiss();
+      toast.success("Account created successfully");
     } catch (error) {
       toast.error(`An error ${error} occurred. Please try again`);
       setLoading(false);
     }
-    toast.success("Account created successfully");
   };
 
   return (

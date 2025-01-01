@@ -54,7 +54,7 @@ const App = () => {
           <Route
             path="/dashboard/*"
             element={
-              <div className="text-white w-full overflow-hidden flex flex-row h-full md:h-screen bg-[#141414]">
+              <div className="text-white w-full overflow-y-auto flex flex-row h-screen bg-[#141414]">
                 <SideBar
                   activeNavbar={activeNavbar}
                   setActiveNavbar={setActiveNavbar}

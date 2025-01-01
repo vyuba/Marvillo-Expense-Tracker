@@ -154,7 +154,7 @@ function Bank() {
   // };
 
   return (
-    <div className="w-full overflow-x-hidden relative">
+    <div className="w-full h-full overflow-x-hidden relative">
       {isVisible && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
           <form

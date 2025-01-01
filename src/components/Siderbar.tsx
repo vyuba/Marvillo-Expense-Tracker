@@ -22,6 +22,7 @@ interface SideBarProps {
 function SideBar({ activeNavbar, setActiveNavbar }: SideBarProps) {
   const { loggedInUser, setLoggedInUser } = useAppContext();
   const [editName, setEditName] = useState(false);
+  const [Name, setName] = useState("");
   const navigate = useNavigate();
   const Navlinks = [
     { name: "home", link: "/dashboard/home", icon: <LucideHome /> },
@@ -35,6 +36,7 @@ function SideBar({ activeNavbar, setActiveNavbar }: SideBarProps) {
   ];
 
   console.log(loggedInUser);
+
   return (
     <nav
       className={`bg-[#0d0d0d] md:w-[300px] fixed md:static inset-0 flex  p-4 z-50 transition-all flex-col justify-between md:translate-x-0 ${
@@ -104,7 +106,7 @@ function SideBar({ activeNavbar, setActiveNavbar }: SideBarProps) {
           <div className=" capitalize w-full">
             {loggedInUser ? (
               <div className="w-full  flex items-center justify-between">
-                <div
+                <form
                   className={`absolute transition-all  ${
                     editName
                       ? "flex h-fit transition-all"
@@ -116,9 +118,40 @@ function SideBar({ activeNavbar, setActiveNavbar }: SideBarProps) {
                     className="outline-none bg-transparent border-b border-accent"
                     type="text"
                     placeholder="username"
+                    value={Name}
+                    onChange={(e) => setName(e.target.value)}
                   />
-                  <button className="capitalize">submit</button>
-                </div>
+                  <button
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      toast.promise(
+                        account.updateName(Name),
+                        {
+                          loading: "Updating name",
+                          success: () => `Successfully updated your name`,
+                          error: (err) => `error: ${err.toString()}`,
+                        },
+                        {
+                          style: {
+                            minWidth: "150px",
+                          },
+                          success: {
+                            duration: 3000,
+                            icon: "✅",
+                          },
+                          error: {
+                            duration: 3000,
+                            icon: "💀",
+                          },
+                        }
+                      );
+                      setEditName(false);
+                    }}
+                    className="capitalize"
+                  >
+                    submit
+                  </button>
+                </form>
                 <div className="flex flex-col w-full ">
                   <div className="flex flex-row w-full gap-8 items-center">
                     <span className="text-white font-semibold text-sm">

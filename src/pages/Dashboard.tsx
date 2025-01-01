@@ -2,7 +2,13 @@ import { useEffect, useState } from "react";
 import { useAppContext } from "../context/AppContext";
 import { Models } from "appwrite";
 import { databases, Query } from "../lib/appwrite";
-import { ArrowDownRight, ArrowUpRight, Wallet } from "lucide-react";
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  Eye,
+  EyeClosed,
+  Wallet,
+} from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -16,6 +22,7 @@ import {
 } from "recharts";
 function Dashboard() {
   const { loggedInUser } = useAppContext();
+  const [eye, setEye] = useState<boolean>(false);
 
   // const data = [
   //   {
@@ -97,7 +104,7 @@ function Dashboard() {
         expense: data.type === "expense" ? parseFloat(data.amount) : 0,
         amt: parseFloat(data.amount), // Total amount
       }))
-    : null;
+    : undefined;
   const TotalExpense = Array.isArray(transaction)
     ? transaction?.reduce<number>((acc, item) => {
         if (item.type === "expense") acc += Number(item.amount);
@@ -111,20 +118,31 @@ function Dashboard() {
       }, 0)
     : 0;
   return (
-    <div className=" h-full">
+    <div className=" w-full h-full">
       <h1 className="capitalize  text-xl font-semibold">
         accounting dashboard
       </h1>
       <div className="flex flex-col justify-between gap-2 py-7 w-full">
         <span className="text-[#4f4e4e] font-medium">Total transactions</span>
         <div className="flex flex-row items-center justify-between gap-2">
-          <span className="text-2xl font-semibold">
-            {transaction?.length
-              ? new Intl.NumberFormat("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                }).format(TotalExpense + TotalIncome)
-              : "--"}
+          <span className="text-2xl font-semibold flex flex-row items-center gap-2">
+            <p>
+              {eye
+                ? transaction?.length
+                  ? new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                    }).format(TotalExpense + TotalIncome)
+                  : "--"
+                : `******`}
+            </p>
+            <button onClick={() => setEye(!eye)}>
+              {eye ? (
+                <Eye className=" rounded-full size-8 p-1" />
+              ) : (
+                <EyeClosed className=" rounded-full size-8 p-1" />
+              )}
+            </button>
           </span>
           <Wallet className=" rounded-full size-8 p-1" />
         </div>
@@ -146,9 +164,7 @@ function Dashboard() {
                   }).format(TotalExpense)
                 : "--"}
             </p>
-            <div className="text-sm text-[#4f4e4e] font-medium">
-              {/* {data.category} */}
-            </div>
+            <div className="text-sm text-[#4f4e4e] font-medium"></div>
           </div>
         </span>
         <span className="text-white gap-5 flex flex-col p-5 bg-[#0d0d0d] w-full flex-1 rounded-md h-fit border border-accent">
@@ -167,9 +183,7 @@ function Dashboard() {
                   }).format(TotalIncome)
                 : "--"}
             </p>
-            <div className="text-sm text-[#4f4e4e] font-medium">
-              {/* {data.category} */}
-            </div>
+            <div className="text-sm text-[#4f4e4e] font-medium"></div>
           </div>
         </span>
         <div className="w-full h-[600px] border border-accent bg-[#0d0d0d] rounded-lg text-white">
