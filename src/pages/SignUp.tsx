@@ -79,8 +79,8 @@ function SignUp() {
             try {
               account.createOAuth2Session(
                 OAuthProvider.Google,
-                "http://localhost:3000/dashboard/home",
-                "http://localhost:3000/Sign up"
+                "https://marvillo-expense-tracker.vercel.app/dashboard/home",
+                "https://marvillo-expense-tracker.vercel.app/Sign up"
               );
             } catch (error) {
               toast.error(`An error ${error} occurred. Please try again`);
