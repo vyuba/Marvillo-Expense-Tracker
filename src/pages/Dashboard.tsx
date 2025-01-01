@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAppContext } from "../context/AppContext";
 // import { LineChart } from "@mui/x-charts/LineChart";
 import { Models } from "appwrite";
-import { databases } from "../lib/appwrite";
+import { databases, Query } from "../lib/appwrite";
 // import { useNavigate } from "react-router";
 // import SideBar from "../components/Siderbar";
 // import { colors } from "@mui/material";
@@ -23,11 +23,15 @@ function Dashboard() {
 
   useEffect(() => {
     const fetchUserTransactions = async () => {
+      if (!loggedInUser) {
+        console.error("User is not logged in");
+        return;
+      }
       try {
         const response = await databases.listDocuments(
           "6762afef001d0296be29",
-          "6762b0fe003da2d7768b"
-          // [Query.equal("user_Id", [userId])]
+          "6762b0fe003da2d7768b",
+          [Query.equal("user_Id", loggedInUser?.$id)]
         );
         console.log(response); // List of transactions
         setTransaction(response.documents);
@@ -37,7 +41,7 @@ function Dashboard() {
     };
 
     fetchUserTransactions();
-  }, []);
+  }, [loggedInUser]);
   console.log(transaction);
 
   const TotalExpense = Array.isArray(transaction)
@@ -53,6 +57,12 @@ function Dashboard() {
       }, 0)
     : 0;
 
+  // const Session = async () => {
+  //   const session = await account.getSession("current");
+  //   console.log(session.expire);
+  // };
+
+  // Session();
   return (
     <div className=" h-full">
       {/* <SideBar shrink={shrink} /> */}

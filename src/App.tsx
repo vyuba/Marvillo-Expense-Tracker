@@ -33,7 +33,6 @@ const App = () => {
         <Routes>
           <Route
             index
-            path="Login"
             element={
               <div className="bg-primary w-screen h-screen flex flex-row">
                 <Login />
@@ -42,6 +41,7 @@ const App = () => {
             }
           />
           <Route
+            path="Sign up"
             index
             element={
               <div className="bg-primary w-screen h-screen flex flex-row">

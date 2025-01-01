@@ -1,18 +1,26 @@
 import { useState, useEffect, useCallback } from "react";
 import { databases, Query } from "../lib/appwrite";
 import { Models } from "appwrite";
+import { useAppContext } from "../context/AppContext";
 
 const useGetListDocument = (formName: string, collectionId: string) => {
   const [loading, setLoading] = useState(true);
   const [documents, setDocuments] = useState<Models.Document[]>([]);
   const [error, setError] = useState<string>("");
 
+  const { loggedInUser } = useAppContext();
+
   const fetchDocuments = useCallback(async () => {
+    if (!loggedInUser) {
+      console.error("User is not logged in");
+      return;
+    }
+    const userId = loggedInUser.$id;
     try {
       const response = await databases.listDocuments(
         "6762afef001d0296be29",
         collectionId,
-        [Query.equal("type", formName)]
+        [Query.equal("type", formName), Query.equal("user_Id", userId)]
       );
       setDocuments(response.documents);
       setLoading(false);
@@ -26,7 +34,7 @@ const useGetListDocument = (formName: string, collectionId: string) => {
       }
       setLoading(false);
     }
-  }, [collectionId, formName]);
+  }, [collectionId, formName, loggedInUser]);
 
   useEffect(() => {
     fetchDocuments();

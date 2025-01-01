@@ -1,9 +1,14 @@
 import { useState } from "react";
 import { databases, ID } from "../lib/appwrite";
-
-const usePostTransaction = () => {
-  //   const [data, setData] = useState<any>(null);
+import useGetListDocument from "./getListDocument";
+const usePostTransaction = (formName: string) => {
   const [loading, setLoading] = useState<boolean>(true);
+  // if (!loggedInUser) {
+  //   console.error("User is not logged in");
+  //   return;
+  // }
+  //   const [data, setData] = useState<any>(null);
+  const { refreshFuc } = useGetListDocument(formName, "6762b0fe003da2d7768b");
 
   const postTransaction = async (data: object) => {
     try {
@@ -15,14 +20,15 @@ const usePostTransaction = () => {
       );
 
       console.log(response);
+      setLoading(false);
     } catch (err) {
       console.log(err);
-    } finally {
       setLoading(false);
     }
+    refreshFuc();
   };
 
-  return { loading, postTransaction };
+  return { loading, postTransaction, setLoading };
 };
 
 export default usePostTransaction;

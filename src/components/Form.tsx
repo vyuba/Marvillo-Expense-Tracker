@@ -3,22 +3,23 @@ import { X } from "lucide-react";
 import usePostTransaction from "../hooks/useForm";
 import { useState } from "react";
 import toast from "react-hot-toast";
-// import { useAppContext } from "../context/AppContext";
+import { useAppContext } from "../context/AppContext";
 interface FormProps {
   formName: string;
   active: boolean;
-  handleFormActive: () => void;
+  setActive: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function Form({ formName, active, handleFormActive }: FormProps) {
-  //   const { loggedInUser } = useAppContext();
-  const { loading, postTransaction } = usePostTransaction();
+function Form({ formName, active, setActive }: FormProps) {
+  const { loggedInUser } = useAppContext();
+
+  const { loading, postTransaction } = usePostTransaction(formName);
   const [data, setData] = useState({
     amount: "",
     type: formName,
     category: "",
     Date: "2024-12-27",
-    user_Id: "676374a1000addadb1f2ff",
+    user_Id: loggedInUser?.$id,
     banksId: "676da5d200108e11cba1ff",
   });
 
@@ -39,7 +40,7 @@ function Form({ formName, active, handleFormActive }: FormProps) {
       <div className="flex flex-row items-center justify-between capitalize">
         <span className="font-medium text-lg">{formName} form</span>
         <button
-          onClick={handleFormActive}
+          onClick={() => setActive(!active)}
           className="p-1 bg-accent border-2 border-background rounded-lg"
         >
           <X />
@@ -48,7 +49,7 @@ function Form({ formName, active, handleFormActive }: FormProps) {
       <form className="flex flex-col gap-3 relative h-full">
         <div className="w-full flex justify-between items-center flex-row">
           <span className="text-sm font-light bg-accent w-fit px-3 py-1 rounded-full border border-primary my-3">
-            749k4n5lhlfdfllkjmn
+            {loggedInUser?.$id}
           </span>
           <span className="capitalize p-2 ">{formName}</span>
         </div>
@@ -109,7 +110,8 @@ function Form({ formName, active, handleFormActive }: FormProps) {
                 },
               }
             );
-            setInterval(() => handleFormActive(), 2000);
+            const interval = setInterval(() => setActive(!active), 2000);
+            clearInterval(interval);
           }}
           //   type="submit"
           className="bg-accent p-2 w-full outline-none focus:border-2 border-accent border rounded-sm capitalize font-medium absolute bottom-10 "

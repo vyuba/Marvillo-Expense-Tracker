@@ -16,7 +16,10 @@ function InteractionProvider({ children }: LayoutProps) {
   const [active, setActive] = useState(false);
   const handleFormActive = () => {
     setActive(!active);
+    return active;
   };
+
+  console.log(active);
 
   return (
     <interactContext.Provider

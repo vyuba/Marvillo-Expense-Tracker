@@ -3,15 +3,24 @@ import { account, OAuthProvider } from "../lib/appwrite";
 // import Modal from "../components/Modal";
 import { useAppContext } from "../context/AppContext";
 import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
+import { useState } from "react";
 function Login() {
-  const { email, setEmail, password, setPassword, updateLoggedInUser } =
-    useAppContext();
+  const [loading, setLoading] = useState(false);
+  const {
+    email,
+    setEmail,
+    password,
+    loggedInUser,
+    setPassword,
+    updateLoggedInUser,
+  } = useAppContext();
 
   const navigate = useNavigate();
 
   async function login(email: string, password: string) {
+    setLoading(true);
     await account.createEmailPasswordSession(email, password);
-    navigate("/dashboard/home");
     const user = await account.get();
     updateLoggedInUser({
       acct: user,
@@ -36,6 +45,8 @@ function Login() {
       targets: user.targets,
       accessedAt: user.accessedAt,
     });
+    navigate("/dashboard/home");
+    setLoading(false);
   }
 
   return (
@@ -50,7 +61,7 @@ function Login() {
       </div>
       <form className="flex flex-col justify-center gap-3 w-full max-w-[360px]">
         <button
-          className="bg-secondary mt-5 border text-white text-base font-medium py-3 rounded-3xl capitalize"
+          className="bg-secondary mt-5 border text-white text-base font-medium py-3 rounded-3xl capitalize flex items-center justify-center gap-3"
           type="button"
           onClick={async () => {
             await account.createOAuth2Session(
@@ -60,7 +71,8 @@ function Login() {
             );
           }}
         >
-          sign up with google
+          <img className="w-5" src="/google-icon-logo-svgrepo-com.svg" alt="" />
+          login with google
         </button>
         <span className="h-[1px] w-full my-5 bg-[#C8BED4]"></span>
         <input
@@ -81,14 +93,37 @@ function Login() {
         <button
           className="bg-accent text-white text-lg font-medium py-3 rounded-3xl capitalize"
           type="button"
-          onClick={() => login(email, password)}
+          onClick={() => {
+            const Login = login(email, password);
+            toast.promise(
+              Login,
+              {
+                loading: "Loging",
+                success: () => `Successfully Logged in ${loggedInUser?.name}`,
+                error: (err) => `error: ${err.toString()}`,
+              },
+              {
+                style: {
+                  minWidth: "150px",
+                },
+                success: {
+                  duration: 3000,
+                  icon: "✅",
+                },
+                error: {
+                  duration: 3000,
+                  icon: "💀",
+                },
+              }
+            );
+          }}
         >
-          Login
+          {loading ? "logging" : "login"}
         </button>
       </form>
       <span className="pt-6">
         Don't have an account yet?{" "}
-        <a href="/" className="text-accent font-medium capitalize">
+        <a href="/Sign up" className="text-accent font-medium capitalize">
           sign up
         </a>
       </span>

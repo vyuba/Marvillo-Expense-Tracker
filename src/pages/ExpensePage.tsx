@@ -1,4 +1,4 @@
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import Form from "../components/Form";
 import { useInteract } from "../context/interactionContext";
 import transactionIcon from "../assets/account_balance.svg";
@@ -6,7 +6,7 @@ import useGetListDocument from "../hooks/getListDocument";
 import { databases } from "../lib/appwrite";
 import { Delete } from "lucide-react";
 function ExpensePage() {
-  const { active, handleFormActive } = useInteract();
+  const { active, setActive } = useInteract();
   const { loading, documents, refreshFuc } = useGetListDocument(
     "expense",
     "6762b0fe003da2d7768b"
@@ -89,16 +89,11 @@ function ExpensePage() {
   };
   return (
     <div className="w-full relative">
-      <Toaster />
-      <Form
-        active={active}
-        formName={"expense"}
-        handleFormActive={handleFormActive}
-      />
+      <Form active={active} setActive={setActive} formName={"expense"} />
       <div className="flex flex-row w-full items-center justify-between">
         <span className="capitalize text-lg font-medium">expense</span>
         <button
-          onClick={handleFormActive}
+          onClick={() => setActive(!active)}
           className="bg-accent rounded-full flex flex-row items-center text-sm capitalize font-medium  py-3 px-4"
         >
           <div className="">

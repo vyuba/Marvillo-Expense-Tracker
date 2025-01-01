@@ -10,6 +10,7 @@ import Tooltip from "./Tooltip";
 import { account } from "../lib/appwrite";
 import { useAppContext } from "../context/AppContext";
 import { useNavigate, NavLink } from "react-router";
+import toast from "react-hot-toast";
 
 interface SideBarProps {
   activeNavbar: boolean;
@@ -117,7 +118,28 @@ function SideBar({ activeNavbar, setActiveNavbar }: SideBarProps) {
                     type="button"
                     className="text-accent font-medium"
                     onClick={async () => {
-                      await account.deleteSession("current");
+                      toast.promise(
+                        account.deleteSession("current"),
+                        {
+                          loading: "Loging out",
+                          success: () =>
+                            `Successfully Logged out ${loggedInUser?.name}`,
+                          error: (err) => `error: ${err.toString()}`,
+                        },
+                        {
+                          style: {
+                            minWidth: "150px",
+                          },
+                          success: {
+                            duration: 3000,
+                            icon: "✅",
+                          },
+                          error: {
+                            duration: 3000,
+                            icon: "💀",
+                          },
+                        }
+                      );
                       setLoggedInUser(null);
                       navigate("/");
                     }}
@@ -130,7 +152,7 @@ function SideBar({ activeNavbar, setActiveNavbar }: SideBarProps) {
                 </span>
               </div>
             ) : (
-              <a className="text-accent font-semibold" href="/login">
+              <a className="text-accent font-semibold" href="/">
                 Login
               </a>
             )}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { type Models } from "appwrite";
 import { useContext, createContext } from "react";
+import { Toaster } from "react-hot-toast";
 interface IAppContext {
   email: string;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
@@ -96,6 +97,7 @@ const AppProvider = ({ children }: LayoutProps) => {
         updateLoggedInUser,
       }}
     >
+      <Toaster />
       {children}
     </appContext.Provider>
   );

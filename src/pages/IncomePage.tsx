@@ -2,12 +2,12 @@ import Form from "../components/Form";
 import transactionIcon from "../assets/account_balance.svg";
 import { databases } from "../lib/appwrite";
 import useGetListDocument from "../hooks/getListDocument";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useInteract } from "../context/interactionContext";
 import { Delete } from "lucide-react";
 
 function IncomePage() {
-  const { active, handleFormActive } = useInteract();
+  const { active, setActive } = useInteract();
 
   const { loading, documents, refreshFuc } = useGetListDocument(
     "income",
@@ -114,16 +114,11 @@ function IncomePage() {
   // };
   return (
     <div className="w-full relative">
-      <Toaster />
-      <Form
-        active={active}
-        formName={"income"}
-        handleFormActive={handleFormActive}
-      />
+      <Form active={active} setActive={setActive} formName={"income"} />
       <div className="flex flex-row w-full items-center justify-between">
         <span className="capitalize text-lg font-medium">income</span>
         <button
-          onClick={handleFormActive}
+          onClick={() => setActive(!active)}
           className="bg-accent rounded-full flex flex-row items-center text-sm capitalize font-medium  py-3 px-4"
         >
           <div className="">
