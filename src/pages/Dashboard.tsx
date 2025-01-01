@@ -17,50 +17,50 @@ import {
 function Dashboard() {
   const { loggedInUser } = useAppContext();
 
-  const data = [
-    {
-      name: "Page A",
-      income: 4000,
-      expense: 2400,
-      amt: 2400,
-    },
-    {
-      name: "Page B",
-      income: 3000,
-      expense: 1398,
-      amt: 2210,
-    },
-    {
-      name: "Page C",
-      income: 2000,
-      expense: 9800,
-      amt: 2290,
-    },
-    {
-      name: "Page D",
-      income: 2780,
-      expense: 3908,
-      amt: 2000,
-    },
-    {
-      name: "Page E",
-      income: 1890,
-      expense: 4800,
-      amt: 2181,
-    },
-    {
-      name: "Page F",
-      income: 2390,
-      expense: 3800,
-      amt: 2500,
-    },
-    {
-      name: "Page G",
-      income: 3490,
-      expense: 4300,
-      amt: 2100,
-    },
-  ];
+  // const data = [
+  //   {
+  //     name: "Page A",
+  //     income: 4000,
+  //     expense: 2400,
+  //     amt: 2400,
+  //   },
+  //   {
+  //     name: "Page B",
+  //     income: 3000,
+  //     expense: 1398,
+  //     amt: 2210,
+  //   },
+  //   {
+  //     name: "Page C",
+  //     income: 2000,
+  //     expense: 9800,
+  //     amt: 2290,
+  //   },
+  //   {
+  //     name: "Page D",
+  //     income: 2780,
+  //     expense: 3908,
+  //     amt: 2000,
+  //   },
+  //   {
+  //     name: "Page E",
+  //     income: 1890,
+  //     expense: 4800,
+  //     amt: 2181,
+  //   },
+  //   {
+  //     name: "Page F",
+  //     income: 2390,
+  //     expense: 3800,
+  //     amt: 2500,
+  //   },
+  //   {
+  //     name: "Page G",
+  //     income: 3490,
+  //     expense: 4300,
+  //     amt: 2100,
+  //   },
+  // ];
 
   console.log(loggedInUser);
   const [transaction, setTransaction] = useState<
@@ -90,6 +90,14 @@ function Dashboard() {
   }, [loggedInUser]);
   console.log(transaction);
 
+  const mappedData = Array.isArray(transaction)
+    ? transaction.map((data) => ({
+        name: data.$createdAt.split("T")[0], // Extract date
+        income: data.type === "income" ? parseFloat(data.amount) : 0,
+        expense: data.type === "expense" ? parseFloat(data.amount) : 0,
+        amt: parseFloat(data.amount), // Total amount
+      }))
+    : null;
   const TotalExpense = Array.isArray(transaction)
     ? transaction?.reduce<number>((acc, item) => {
         if (item.type === "expense") acc += Number(item.amount);
@@ -102,13 +110,6 @@ function Dashboard() {
         return acc;
       }, 0)
     : 0;
-
-  // const Session = async () => {
-  //   const session = await account.getSession("current");
-  //   console.log(session.expire);
-  // };
-
-  // Session();
   return (
     <div className=" h-full">
       <h1 className="capitalize  text-xl font-semibold">
@@ -176,9 +177,9 @@ function Dashboard() {
             <BarChart
               width={500}
               height={300}
-              data={data}
+              data={mappedData}
               margin={{
-                top: 5,
+                top: 50,
                 right: 30,
                 left: 20,
                 bottom: 5,
@@ -198,7 +199,7 @@ function Dashboard() {
                   borderRadius: 10,
                 }}
               />
-              <Legend />
+              <Legend wrapperStyle={{ top: 20 }} />
               <Bar
                 dataKey="income"
                 className="stroke-accent fill-purple-400 stroke-2"
