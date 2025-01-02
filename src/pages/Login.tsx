@@ -66,8 +66,8 @@ function Login() {
           onClick={async () => {
             await account.createOAuth2Session(
               OAuthProvider.Google,
-              "http://localhost:3000",
-              "http://localhost:3000/fail"
+              "https://marvillo-expense-tracker.vercel.app/dashboard/home",
+              "https://marvillo-expense-tracker.vercel.app/Sign up"
             );
           }}
         >
