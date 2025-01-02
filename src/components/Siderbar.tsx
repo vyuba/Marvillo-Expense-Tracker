@@ -35,7 +35,42 @@ function SideBar({ activeNavbar, setActiveNavbar }: SideBarProps) {
     },
   ];
 
-  console.log(loggedInUser);
+  const handleLogout = async () => {
+    try {
+      toast.loading("Logging out");
+      await account.deleteSession("current");
+      setLoggedInUser(null);
+      navigate("/");
+      location.reload();
+
+      toast.success(`Successfully Logged out ${loggedInUser?.name}`);
+    } catch (error: unknown) {
+      console.log(`${error}`);
+      toast.error(`${error}`);
+    }
+  };
+
+  // toast.promise(
+  //  const error = handleLogout(),
+  //   {
+  //     loading: "Loging out",
+  //     success: () => `Successfully Logged out ${loggedInUser?.name}`,
+  //     error: (err) => `error: ${err.toString()}`,
+  //   },
+  //   {
+  //     style: {
+  //       minWidth: "150px",
+  //     },
+  //     success: {
+  //       duration: 3000,
+  //       icon: "✅",
+  //     },
+  //     error: {
+  //       duration: 3000,
+  //       icon: "💀",
+  //     },
+  //   }
+  // );
 
   return (
     <nav
@@ -104,7 +139,7 @@ function SideBar({ activeNavbar, setActiveNavbar }: SideBarProps) {
         </NavLink>
         <li className="bg-[#121212] w-full relative py-4 px-3 rounded-lg items-center gap-2 flex flex-row">
           <div className=" capitalize w-full">
-            {loggedInUser ? (
+            {loggedInUser && loggedInUser?.acct?.current ? (
               <div className="w-full  flex items-center justify-between">
                 <form
                   className={`absolute transition-all  ${
@@ -170,32 +205,7 @@ function SideBar({ activeNavbar, setActiveNavbar }: SideBarProps) {
                   <button
                     type="button"
                     className="text-accent font-medium"
-                    onClick={async () => {
-                      toast.promise(
-                        account.deleteSession("current"),
-                        {
-                          loading: "Loging out",
-                          success: () =>
-                            `Successfully Logged out ${loggedInUser?.name}`,
-                          error: (err) => `error: ${err.toString()}`,
-                        },
-                        {
-                          style: {
-                            minWidth: "150px",
-                          },
-                          success: {
-                            duration: 3000,
-                            icon: "✅",
-                          },
-                          error: {
-                            duration: 3000,
-                            icon: "💀",
-                          },
-                        }
-                      );
-                      setLoggedInUser(null);
-                      navigate("/");
-                    }}
+                    onClick={handleLogout}
                   >
                     Logout
                   </button>

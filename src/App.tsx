@@ -13,10 +13,11 @@ import ExpensePage from "./pages/ExpensePage";
 import { InteractionProvider } from "./context/interactionContext";
 import Navbar from "./components/Navbar";
 import Profile from "./pages/Profile";
+// import { account } from "./lib/appwrite";
 // import Profile from "./pages/Profile";
+// import { useAppContext } from "./context/AppContext";
 
 const App = () => {
-  // const [loggedInUser, setLoggedInUser] = useState(null);
   // const [email, setEmail] = useState("");
   // const [password, setPassword] = useState("");
   // const [name, setName] = useState("");
@@ -26,6 +27,7 @@ const App = () => {
 
   //   setLoggedInUser(await account.get());
   // }
+
   const [activeNavbar, setActiveNavbar] = useState(false);
 
   return (
@@ -54,7 +56,7 @@ const App = () => {
           <Route
             path="/dashboard/*"
             element={
-              <div className="text-white w-full overflow-y-auto flex flex-row h-screen bg-[#141414]">
+              <div className="text-white w-full overflow-y-auto md:overflow-hidden flex flex-row h-screen bg-[#141414]">
                 <SideBar
                   activeNavbar={activeNavbar}
                   setActiveNavbar={setActiveNavbar}

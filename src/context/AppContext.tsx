@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { type Models } from "appwrite";
 import { useContext, createContext } from "react";
 import { Toaster } from "react-hot-toast";
+// import { useEffect } from "react";
 interface IAppContext {
   email: string;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
@@ -18,7 +19,7 @@ const appContext = createContext<IAppContext | null>(null);
 
 interface ILoggedInUser extends Models.User<Models.Preferences> {
   isActive: boolean;
-  acct: object | null;
+  acct: Models.Session | null | undefined;
   data: object | null;
   $id: string;
   $createdAt: string;
@@ -110,3 +111,14 @@ if (!useAppContext) {
 }
 
 export { AppProvider, useAppContext };
+
+// Usage
+// const PrivateRoute = ({ children }) => {
+//   const { user } = useAuth();
+
+//   if (!user) {
+//     return <Navigate to="/login" replace />;
+//   }
+
+//   return children;
+// };

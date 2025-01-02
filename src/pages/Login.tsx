@@ -19,10 +19,11 @@ function Login() {
   const navigate = useNavigate();
   async function login(email: string, password: string) {
     setLoading(true);
-    await account.createEmailPasswordSession(email, password);
+    const loggedIn = await account.createEmailPasswordSession(email, password);
+    console.log(loggedIn);
     const user = await account.get();
     updateLoggedInUser({
-      acct: user,
+      acct: loggedIn,
       isActive: true,
       $id: user.$id,
       $createdAt: user.$createdAt,
@@ -97,7 +98,7 @@ function Login() {
             toast.promise(
               Login,
               {
-                loading: "Loging",
+                loading: "Logging",
                 success: () => `Successfully Logged in ${loggedInUser?.name}`,
                 error: (err) => `error: ${err.toString()}`,
               },

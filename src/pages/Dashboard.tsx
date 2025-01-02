@@ -86,7 +86,7 @@ function Dashboard() {
           "6762b0fe003da2d7768b",
           [Query.equal("user_Id", loggedInUser?.$id)]
         );
-        console.log(response); // List of transactions
+        // console.log(response); // List of transactions
         setTransaction(response.documents);
       } catch (error) {
         console.error("Error fetching transactions:", error);
@@ -95,7 +95,7 @@ function Dashboard() {
 
     fetchUserTransactions();
   }, [loggedInUser]);
-  console.log(transaction);
+  // console.log(transaction);
 
   const mappedData = Array.isArray(transaction)
     ? transaction.map((data) => ({
