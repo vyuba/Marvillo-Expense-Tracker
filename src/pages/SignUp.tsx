@@ -89,7 +89,7 @@ function SignUp() {
             try {
               account.createOAuth2Session(
                 OAuthProvider.Google,
-                "https://marvillo-expense-tracker.vercel.app/dashboard/home",
+                "https://marvillo-expense-tracker.vercel.app/",
                 "https://marvillo-expense-tracker.vercel.app/Sign up"
               );
             } catch (error) {
