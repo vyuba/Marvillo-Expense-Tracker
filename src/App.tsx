@@ -12,9 +12,10 @@ import IncomePage from "./pages/IncomePage";
 import ExpensePage from "./pages/ExpensePage";
 import { InteractionProvider } from "./context/interactionContext";
 import Navbar from "./components/Navbar";
-import Profile from "./pages/Profile";
+// import Profile from "./pages/Profile";
 import PasswordRecovery from "./pages/PasswordRecovery";
 import NewPassword from "./pages/NewPassword";
+import ComingSoon from "./pages/ComingSoon";
 // import { account } from "./lib/appwrite";
 // import Profile from "./pages/Profile";
 // import { useAppContext } from "./context/AppContext";
@@ -134,7 +135,7 @@ const App = () => {
                       <Route path="bank" element={<Bank />} />
                       <Route path="/income" element={<IncomePage />} />
                       <Route path="/expense" element={<ExpensePage />} />
-                      <Route path="/profile" element={<Profile />} />
+                      <Route path="/profile" element={<ComingSoon />} />
                     </Routes>
                   </InteractionProvider>
                 </div>

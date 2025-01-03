@@ -5,7 +5,7 @@ interface NavbarProps {
 }
 function Navbar({ activeNavbar, setActiveNavbar }: NavbarProps) {
   return (
-    <div className="w-full z-50 bg-[#0D0D0D] border-b-2 border-secondary  fixed top-0 left-0 md:hidden">
+    <div className="w-full z-[100] bg-[#0D0D0D] border-b-2 border-secondary  fixed top-0 left-0 md:hidden">
       <nav className="w-full flex items-center py-5 px-5 gap-3 justify-between">
         <div className="flex flex-row items-center gap-2">
           <img className="w-8" src="/marvilo.svg" alt="" />

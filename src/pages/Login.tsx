@@ -1,5 +1,5 @@
 // import { useState } from "react";
-import { account, OAuthProvider } from "../lib/appwrite";
+import { account } from "../lib/appwrite";
 import { useAppContext } from "../context/AppContext";
 import { Link, useNavigate } from "react-router";
 import toast from "react-hot-toast";
@@ -64,7 +64,7 @@ function Login() {
         </h1>
       </div>
       <form className="flex flex-col justify-center gap-3 w-full max-w-[360px]">
-        <button
+        {/* <button
           className="bg-secondary mt-5 border text-white text-base font-medium py-3 rounded-3xl capitalize flex items-center justify-center gap-3"
           type="button"
           onClick={async () => {
@@ -77,7 +77,7 @@ function Login() {
         >
           <img className="w-5" src="/google-icon-logo-svgrepo-com.svg" alt="" />
           login with google
-        </button>
+        </button> */}
         <span className="h-[1px] w-full my-5 bg-[#C8BED4]"></span>
         <input
           className="bg-secondary py-3 px-3 rounded-md mb-2"

@@ -1,5 +1,5 @@
 // import { useState } from "react";
-import { account, ID, OAuthProvider, databases } from "../lib/appwrite";
+import { account, ID, databases } from "../lib/appwrite";
 import { useAppContext } from "../context/AppContext";
 import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
@@ -82,16 +82,18 @@ function SignUp() {
         </h1>
       </div>
       <form className="flex flex-col justify-center gap-3 w-full max-w-[360px]">
-        <button
+        {/* <button
           className="bg-secondary mt-5 border text-white text-base font-medium py-3 rounded-3xl capitalize flex items-center justify-center gap-3"
           type="button"
           onClick={async () => {
             try {
               account.createOAuth2Session(
                 OAuthProvider.Google,
-                "https://marvillo-expense-tracker.vercel.app/",
-                "https://marvillo-expense-tracker.vercel.app/Sign up"
+                "http://localhost:3000/dashboard/home",
+                "http://localhost:3000/fail"
               );
+              const session = await account.getSession("current");
+              console.log(session);
             } catch (error) {
               toast.error(`An error ${error} occurred. Please try again`);
             }
@@ -99,7 +101,7 @@ function SignUp() {
         >
           <img className="w-5" src="/google-icon-logo-svgrepo-com.svg" alt="" />
           sign up with google
-        </button>
+        </button> */}
         <span className="h-[1px] w-full my-5 bg-[#C8BED4]"></span>
         <input
           className="bg-secondary py-3 px-3 rounded-md mb-2"

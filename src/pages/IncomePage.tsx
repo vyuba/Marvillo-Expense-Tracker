@@ -245,7 +245,7 @@ function IncomePage() {
         </>
       ) : (
         <div className="w-full h-[calc(100lvh-80px)] flex items-center justify-center flex-col gap-5">
-          <img className="w-64" src={transactionIcon} alt="" />
+          <img className="w-52  md:w-64" src={transactionIcon} alt="" />
           <span className="capitalize font-medium text-lg">
             you dont have any income transaction details yet
           </span>

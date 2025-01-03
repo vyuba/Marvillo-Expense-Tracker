@@ -13,6 +13,7 @@ import { useAppContext } from "../context/AppContext";
 import { useNavigate, NavLink } from "react-router";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import { useUser } from "../utils/script";
 
 interface SideBarProps {
   activeNavbar: boolean;
@@ -35,6 +36,7 @@ function SideBar({ activeNavbar, setActiveNavbar }: SideBarProps) {
     },
   ];
 
+  const { getUser } = useUser();
   const handleLogout = async () => {
     try {
       toast.loading("Logging out");
@@ -74,7 +76,7 @@ function SideBar({ activeNavbar, setActiveNavbar }: SideBarProps) {
 
   return (
     <nav
-      className={`bg-[#0d0d0d] md:w-[300px] fixed md:static inset-0 flex  p-4 z-[1000] transition-all flex-col justify-between md:translate-x-0 ${
+      className={`bg-[#0d0d0d] md:w-[300px] fixed md:static inset-0 flex  p-4 z-[70] transition-all flex-col justify-between md:translate-x-0 ${
         activeNavbar ? "translate-x-0" : "-translate-x-full"
       }`}
     >
@@ -152,7 +154,7 @@ function SideBar({ activeNavbar, setActiveNavbar }: SideBarProps) {
                   <input
                     className="outline-none bg-transparent border-b border-accent"
                     type="text"
-                    placeholder="username"
+                    placeholder="new username"
                     value={Name}
                     onChange={(e) => setName(e.target.value)}
                   />
@@ -181,8 +183,9 @@ function SideBar({ activeNavbar, setActiveNavbar }: SideBarProps) {
                         }
                       );
                       setEditName(false);
+                      getUser();
                     }}
-                    className="capitalize"
+                    className="capitalize bg-accent rounded-xl p-1"
                   >
                     submit
                   </button>
@@ -190,7 +193,9 @@ function SideBar({ activeNavbar, setActiveNavbar }: SideBarProps) {
                 <div className="flex flex-col w-full ">
                   <div className="flex flex-row w-full gap-8 items-center">
                     <span className="text-white font-semibold text-sm">
-                      {loggedInUser?.name === "" ? "User" : loggedInUser?.name}
+                      {loggedInUser?.name === ""
+                        ? "New User"
+                        : loggedInUser?.name}
                     </span>
                   </div>
                   <span className="text-xs text-white font-light">
