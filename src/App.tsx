@@ -41,7 +41,27 @@ const App = () => {
             element={
               <div className="bg-primary w-screen h-screen flex flex-row">
                 <Login />
-                <div className="hidden md:block flex-1 h-full bg-accent"></div>
+                <div className="hidden md:block flex-1 h-full bg-accent relative overflow-hidden">
+                  <div className="absolute inset-0 z-10 capitalize text-white text-4xl font-bold flex flex-col items-center justify-center gap-4">
+                    <img className="w-20" src="/marvilo.svg" alt="" />
+                    <p>marvillo</p>
+                  </div>
+                  <img
+                    className="absolute -top-[300px] -left-[200px]"
+                    src="/Frame 4.png"
+                    alt="marvillo banner"
+                  />
+                  <img
+                    className="absolute bottom-0 -right-[250px]"
+                    src="/Frame 1.png"
+                    alt="marvillo banner"
+                  />
+                  <img
+                    className="absolute bottom-40 -left-[250px] "
+                    src="/Untitled - Copy@8-1721x983 (2) 3.png"
+                    alt="marvillo banner"
+                  />
+                </div>
               </div>
             }
           />
