@@ -2,13 +2,22 @@
 import { account, ID, OAuthProvider, databases } from "../lib/appwrite";
 import { useAppContext } from "../context/AppContext";
 import { useNavigate } from "react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 function SignUp() {
   const [loading, setLoading] = useState(false);
-  const { email, setEmail, password, setPassword, setLoggedInUser } =
-    useAppContext();
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    setLoggedInUser,
+    checkUserIsLoggedIn,
+  } = useAppContext();
   const navigate = useNavigate();
+  useEffect(() => {
+    checkUserIsLoggedIn(navigate);
+  }, [checkUserIsLoggedIn, navigate]);
   async function login(email: string, password: string) {
     await account.createEmailPasswordSession(email, password);
     navigate("/dashboard/home");

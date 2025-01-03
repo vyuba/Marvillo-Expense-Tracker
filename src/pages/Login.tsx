@@ -4,7 +4,7 @@ import { account, OAuthProvider } from "../lib/appwrite";
 import { useAppContext } from "../context/AppContext";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 function Login() {
   const [loading, setLoading] = useState(false);
   const {
@@ -14,6 +14,7 @@ function Login() {
     loggedInUser,
     setPassword,
     updateLoggedInUser,
+    checkUserIsLoggedIn,
   } = useAppContext();
 
   const navigate = useNavigate();
@@ -48,6 +49,10 @@ function Login() {
     navigate("/dashboard/home");
     setLoading(false);
   }
+
+  useEffect(() => {
+    checkUserIsLoggedIn(navigate);
+  }, [checkUserIsLoggedIn, navigate]);
 
   return (
     <div className=" text-white flex-1 h-full px-9 flex flex-col items-center justify-center">

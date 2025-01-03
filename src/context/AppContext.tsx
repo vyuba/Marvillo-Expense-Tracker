@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { type Models } from "appwrite";
 import { useContext, createContext } from "react";
 import { Toaster } from "react-hot-toast";
-// import { useEffect } from "react";
+import { account } from "../lib/appwrite";
+import { useCallback } from "react";
 interface IAppContext {
   email: string;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
@@ -13,6 +14,7 @@ interface IAppContext {
   loggedInUser: ILoggedInUser | null;
   setLoggedInUser: React.Dispatch<React.SetStateAction<ILoggedInUser | null>>;
   updateLoggedInUser: (updates: Partial<ILoggedInUser>) => void;
+  checkUserIsLoggedIn: (navigate: (path: string) => void) => void;
 }
 
 const appContext = createContext<IAppContext | null>(null);
@@ -40,6 +42,10 @@ interface ILoggedInUser extends Models.User<Models.Preferences> {
   prefs: Models.Preferences;
   targets: Models.Target[];
   accessedAt: string;
+}
+
+interface CheckUserIsLoggedIn {
+  (navigate: (path: string) => void): Promise<void>;
 }
 
 interface LayoutProps {
@@ -84,6 +90,15 @@ const AppProvider = ({ children }: LayoutProps) => {
     });
   };
 
+  const checkUserIsLoggedIn: CheckUserIsLoggedIn = useCallback(
+    async (navigate) => {
+      const user = await account.get();
+      if (user) {
+        navigate("/dashboard/home");
+      }
+    },
+    []
+  );
   return (
     <appContext.Provider
       value={{
@@ -96,6 +111,7 @@ const AppProvider = ({ children }: LayoutProps) => {
         loggedInUser,
         setLoggedInUser,
         updateLoggedInUser,
+        checkUserIsLoggedIn,
       }}
     >
       <Toaster />

@@ -1,37 +1,40 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { useGetBanks } from "../hooks/getBanks";
 import { Search } from "lucide-react";
 import bankIcon from "../assets/bank.svg";
-import { databases, ID } from "../lib/appwrite";
-import { useAppContext } from "../context/AppContext";
-import { Models } from "appwrite";
+// import { databases, ID } from "../lib/appwrite";
+// import { useAppContext } from "../context/AppContext";
+// import { Models } from "appwrite";
+import Form from "../components/Form";
+import { useInteract } from "../context/interactionContext";
 
-interface BankDetails {
-  response: Models.DocumentList<Models.Document> | undefined;
-}
+// interface BankDetails {
+//   response: Models.DocumentList<Models.Document> | undefined;
+// }
 
 function Bank() {
   const { bank, loading } = useGetBanks();
-  const { loggedInUser } = useAppContext();
-  const [acctNo, setAcctNo] = useState<string>();
-  const [BankName, setBankName] = useState<string>();
+  // const { loggedInUser } = useAppContext();
+  // const [acctNo, setAcctNo] = useState<string>();
+  // const [BankName, setBankName] = useState<string>();
+  const { active, setActive } = useInteract();
   // const [active, setActive] = useState({
   //   id: 0,
   //   active: 0,
   //   left: 0,
   // });
-  const [bankDetails, setBankDetails] = useState<BankDetails>({
-    response: undefined,
-  });
-  const [isVisible, setIsVisible] = useState(false);
+  // const [bankDetails, setBankDetails] = useState<BankDetails>({
+  //   response: undefined,
+  // });
+  // const [isVisible, setIsVisible] = useState(false);
 
-  const handleButtonClick = () => {
-    setIsVisible(true);
-  };
+  // const handleButtonClick = () => {
+  //   setIsVisible(true);
+  // };
 
-  const handleClose = () => {
-    setIsVisible(false);
-  };
+  // const handleClose = () => {
+  //   setIsVisible(false);
+  // };
   console.log(bank);
   // const data: Array<any> = [
   //   { id: 1, name: "John Doe", age: 28, email: "john@example.com" },
@@ -121,23 +124,23 @@ function Bank() {
     );
   }
 
-  const handleSubmit = async (BankDetail: object) => {
-    try {
-      const response = await databases.createDocument(
-        "6762afef001d0296be29",
-        "676377de0017b54237c7",
-        ID.unique(),
-        BankDetail
-      );
-      setBankDetails({
-        response: response?.documents || undefined, // Safe check for response and documents
-      });
+  // const handleSubmit = async (BankDetail: object) => {
+  //   try {
+  //     const response = await databases.createDocument(
+  //       "6762afef001d0296be29",
+  //       "676377de0017b54237c7",
+  //       ID.unique(),
+  //       BankDetail
+  //     );
+  //     setBankDetails({
+  //       response: response?.documents || undefined, // Safe check for response and documents
+  //     });
 
-      console.log(bankDetails);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  //     console.log(bankDetails);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   // const handleDelete = async (id) => {
   //   try {
@@ -155,73 +158,11 @@ function Bank() {
 
   return (
     <div className="w-full h-full overflow-x-hidden relative">
-      {isVisible && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
-          <form
-            className="flex flex-col justify-between p-5 bg-[#121212] rounded-xl w-full max-w-[400px] h-[300px]"
-            method="post"
-          >
-            <div className="flex flex-col gap-5">
-              {/* Bank Name Input */}
-              <div className="flex flex-col gap-1 w-full">
-                <label htmlFor="bank_name" className="capitalize text-white">
-                  Bank name
-                </label>
-                <input
-                  className="bg-transparent w-full p-2 placeholder:capitalize outline-none border border-accent text-white"
-                  type="text"
-                  id="bank_name"
-                  placeholder="bank name"
-                  onChange={(event) => {
-                    setBankName(event.target.value);
-                  }}
-                />
-              </div>
-
-              {/* Account Number Input */}
-              <div className="flex flex-col gap-1 w-full">
-                <label htmlFor="acctNo" className="capitalize text-white">
-                  Account number
-                </label>
-                <input
-                  className="bg-transparent p-2 w-full placeholder:capitalize outline-none border border-accent text-white"
-                  type="text"
-                  id="acctNo"
-                  placeholder="account number"
-                  onChange={(event) => {
-                    setAcctNo(event.target.value);
-                  }}
-                />
-              </div>
-            </div>
-
-            <input
-              type="button"
-              className="bg-accent rounded-lg py-3 text-lg capitalize font-medium text-white"
-              value="Submit"
-              onClick={() =>
-                handleSubmit({
-                  BankName,
-                  usersId: loggedInUser?.$id,
-                  acctNo,
-                })
-              }
-            />
-          </form>
-
-          {/* Close Button */}
-          <button
-            onClick={handleClose}
-            className="absolute top-5 right-5 text-white text-2xl"
-          >
-            ✕
-          </button>
-        </div>
-      )}
+      <Form active={active} setActive={setActive} formName={"bank"} />
       <div className="w-full flex flex-row justify-between pb-4 items-center">
         <span className="text-xl font-medium">Banks</span>
         <button
-          onClick={handleButtonClick}
+          onClick={() => setActive(!active)}
           className="bg-accent rounded-full flex flex-row items-center text-sm capitalize font-medium  py-3 px-4"
         >
           <div className="">
@@ -290,10 +231,20 @@ function Bank() {
             {bank?.filteredBanks &&
               bank?.filteredBanks.map((bank) => (
                 <li
-                  className={`p-4 cursor-pointer bg-secondary rounded-md hover:text-accent transition-[color] `}
+                  className={`p-4 cursor-pointer bg-secondary rounded-md hover:text-accent border-2 border-primary transition-[color]  relative flex flex-row items-center justify-between`}
                   key={bank.$id}
                 >
-                  {bank.BankName}
+                  <span
+                    className={`absolute left-0 h-full w-2 bg-[${bank.color}]`}
+                  ></span>
+                  <p>{bank.BankName}</p>
+                  <p>
+                    {" "}
+                    {new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                    }).format(bank.amount)}
+                  </p>
                 </li>
               ))}
           </ul>

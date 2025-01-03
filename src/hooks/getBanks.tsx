@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { databases } from "../lib/appwrite";
+import { databases, Query } from "../lib/appwrite";
 import { Models } from "appwrite";
 
 import { useAppContext } from "../context/AppContext";
@@ -20,21 +20,21 @@ export const useGetBanks = () => {
     try {
       const response = await databases.listDocuments(
         "6762afef001d0296be29",
-        "676377de0017b54237c7"
+        "676377de0017b54237c7",
+        [Query.equal("usersId", loggedInUser.$id)]
       );
 
+      console.log(response);
       // Filter or resolve relationships manually
-      const filteredBanks = response.documents.filter(
-        (bank) => bank.usersId === loggedInUser.$id
-      );
-
-      console.log(filteredBanks);
+      // const filteredBanks = response.documents.filter(
+      //   (bank) => bank.usersId === loggedInUser.$id
+      // );
       const Bankresponse = await databases.listDocuments(
         "6762afef001d0296be29",
         "6762b0fe003da2d7768b"
       );
       console.log(Bankresponse);
-      setBank({ filteredBanks, Bankresponse });
+      setBank({ filteredBanks: response.documents, Bankresponse });
       setLoading(false);
     } catch (error) {
       console.error("Error fetching banks", error);
