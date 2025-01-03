@@ -13,6 +13,8 @@ import ExpensePage from "./pages/ExpensePage";
 import { InteractionProvider } from "./context/interactionContext";
 import Navbar from "./components/Navbar";
 import Profile from "./pages/Profile";
+import PasswordRecovery from "./pages/PasswordRecovery";
+import NewPassword from "./pages/NewPassword";
 // import { account } from "./lib/appwrite";
 // import Profile from "./pages/Profile";
 // import { useAppContext } from "./context/AppContext";
@@ -49,6 +51,26 @@ const App = () => {
             element={
               <div className="bg-primary w-screen h-screen flex flex-row">
                 <SignUp />
+                <div className="hidden md:block flex-1 h-full bg-accent"></div>
+              </div>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            index
+            element={
+              <div className="bg-primary w-screen h-screen flex flex-row">
+                <PasswordRecovery />
+                <div className="hidden md:block flex-1 h-full bg-accent"></div>
+              </div>
+            }
+          />
+          <Route
+            path="/newpassword"
+            index
+            element={
+              <div className="bg-primary w-screen h-screen flex flex-row">
+                <NewPassword />
                 <div className="hidden md:block flex-1 h-full bg-accent"></div>
               </div>
             }

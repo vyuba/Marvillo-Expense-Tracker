@@ -197,7 +197,7 @@ function Form({ formName, active, setActive }: FormProps) {
           </button>
         </form>
       ) : (
-        <div>
+        <div className="w-full h-full">
           <form className="flex flex-col gap-3 relative h-full">
             <div className="w-full flex justify-between items-center flex-row">
               <span className="text-sm font-light bg-accent w-fit px-3 py-1 rounded-full border border-primary my-3">

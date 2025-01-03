@@ -1,7 +1,7 @@
 // import { useState } from "react";
 import { account, OAuthProvider } from "../lib/appwrite";
 import { useAppContext } from "../context/AppContext";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 function Login() {
@@ -93,6 +93,13 @@ function Login() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+
+        <Link
+          to="/forgot-password"
+          className="text-accent font-medium capitalize"
+        >
+          Forgot password?
+        </Link>
 
         <button
           className="bg-accent text-white text-lg font-medium py-3 rounded-3xl capitalize"
