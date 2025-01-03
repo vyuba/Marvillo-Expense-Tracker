@@ -10,6 +10,7 @@ import { useGetBanks } from "../hooks/getBanks";
 interface FormProps {
   formName: string;
   active: boolean;
+  refreshFuc?: () => void;
   setActive: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -17,11 +18,11 @@ interface BankDetails {
   response: Models.DocumentList<Models.Document> | undefined;
 }
 
-function Form({ formName, active, setActive }: FormProps) {
+function Form({ formName, active, setActive, refreshFuc }: FormProps) {
   const { loggedInUser } = useAppContext();
   const { Bank } = useGetBanks();
 
-  const { loading, postTransaction } = usePostTransaction(formName);
+  const { loading, postTransaction } = usePostTransaction();
   const [data, setData] = useState({
     amount: "",
     type: formName,
@@ -188,6 +189,7 @@ function Form({ formName, active, setActive }: FormProps) {
                   },
                 }
               );
+              refreshFuc?.();
               setActive(!active);
             }}
             //   type="submit"

@@ -74,7 +74,7 @@ function SideBar({ activeNavbar, setActiveNavbar }: SideBarProps) {
 
   return (
     <nav
-      className={`bg-[#0d0d0d] md:w-[300px] fixed md:static inset-0 flex  p-4 z-50 transition-all flex-col justify-between md:translate-x-0 ${
+      className={`bg-[#0d0d0d] md:w-[300px] fixed md:static inset-0 flex  p-4 z-[1000] transition-all flex-col justify-between md:translate-x-0 ${
         activeNavbar ? "translate-x-0" : "-translate-x-full"
       }`}
     >

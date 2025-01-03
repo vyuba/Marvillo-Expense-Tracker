@@ -110,7 +110,12 @@ function IncomePage() {
   // };
   return (
     <div className="w-full relative">
-      <Form active={active} setActive={setActive} formName={"income"} />
+      <Form
+        active={active}
+        refreshFuc={refreshFuc}
+        setActive={setActive}
+        formName={"income"}
+      />
       <div className="flex flex-row w-full items-center justify-between">
         <span className="capitalize text-lg font-medium">income</span>
         <button

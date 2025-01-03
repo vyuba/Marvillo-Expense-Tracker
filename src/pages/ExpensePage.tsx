@@ -86,7 +86,12 @@ function ExpensePage() {
   };
   return (
     <div className="w-full relative">
-      <Form active={active} setActive={setActive} formName={"expense"} />
+      <Form
+        active={active}
+        refreshFuc={refreshFuc}
+        setActive={setActive}
+        formName={"expense"}
+      />
       <div className="flex flex-row w-full items-center justify-between">
         <span className="capitalize text-lg font-medium">expense</span>
         <button

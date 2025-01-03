@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { account } from "../lib/appwrite";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 const NewPassword: React.FC = () => {
   const [password, setPassword] = useState("");
   const [userId, setUserId] = useState("");
@@ -14,6 +15,8 @@ const NewPassword: React.FC = () => {
     setSecret(secret || "");
   }, []);
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
@@ -26,15 +29,11 @@ const NewPassword: React.FC = () => {
       console.log("New password submitted:", result);
       toast.dismiss();
       toast.success("Password updated successfully");
+      navigate("/");
     } catch (error: unknown) {
       toast.error(`Error: ${error}`);
     }
   };
-
-  if (password && password.length < 8) {
-    toast.error("Password is must be above 8 characters");
-    return;
-  }
 
   return (
     <div className="text-white flex-1 h-full px-9 flex flex-col items-center justify-center ">
