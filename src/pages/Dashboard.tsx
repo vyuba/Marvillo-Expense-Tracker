@@ -23,53 +23,6 @@ import {
 function Dashboard() {
   const { loggedInUser } = useAppContext();
   const [eye, setEye] = useState<boolean>(false);
-
-  // const data = [
-  //   {
-  //     name: "Page A",
-  //     income: 4000,
-  //     expense: 2400,
-  //     amt: 2400,
-  //   },
-  //   {
-  //     name: "Page B",
-  //     income: 3000,
-  //     expense: 1398,
-  //     amt: 2210,
-  //   },
-  //   {
-  //     name: "Page C",
-  //     income: 2000,
-  //     expense: 9800,
-  //     amt: 2290,
-  //   },
-  //   {
-  //     name: "Page D",
-  //     income: 2780,
-  //     expense: 3908,
-  //     amt: 2000,
-  //   },
-  //   {
-  //     name: "Page E",
-  //     income: 1890,
-  //     expense: 4800,
-  //     amt: 2181,
-  //   },
-  //   {
-  //     name: "Page F",
-  //     income: 2390,
-  //     expense: 3800,
-  //     amt: 2500,
-  //   },
-  //   {
-  //     name: "Page G",
-  //     income: 3490,
-  //     expense: 4300,
-  //     amt: 2100,
-  //   },
-  // ];
-
-  console.log(loggedInUser);
   const [transaction, setTransaction] = useState<
     Models.Document[] | (() => Document[])
   >([]);
@@ -95,7 +48,6 @@ function Dashboard() {
 
     fetchUserTransactions();
   }, [loggedInUser]);
-  // console.log(transaction);
 
   const mappedData = Array.isArray(transaction)
     ? transaction.map((data) => ({
@@ -157,12 +109,14 @@ function Dashboard() {
           </span>
           <div className="w-full flex flex-row justify-between items-center">
             <p className="font-semibold text-xl">
-              {TotalExpense
-                ? new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                  }).format(TotalExpense)
-                : "--"}
+              {eye
+                ? TotalExpense
+                  ? new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                    }).format(TotalExpense)
+                  : "--"
+                : `******`}
             </p>
             <div className="text-sm text-[#4f4e4e] font-medium"></div>
           </div>
@@ -176,12 +130,14 @@ function Dashboard() {
           </span>
           <div className="w-full flex flex-row justify-between items-center">
             <p className="font-semibold text-xl">
-              {TotalIncome
-                ? new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                  }).format(TotalIncome)
-                : "--"}
+              {eye
+                ? TotalIncome
+                  ? new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                    }).format(TotalIncome)
+                  : "--"
+                : `******`}
             </p>
             <div className="text-sm text-[#4f4e4e] font-medium"></div>
           </div>

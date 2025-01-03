@@ -13,7 +13,7 @@ import { useInteract } from "../context/interactionContext";
 // }
 
 function Bank() {
-  const { bank, loading } = useGetBanks();
+  const { Bank, loading } = useGetBanks();
   // const { loggedInUser } = useAppContext();
   // const [acctNo, setAcctNo] = useState<string>();
   // const [BankName, setBankName] = useState<string>();
@@ -35,7 +35,7 @@ function Bank() {
   // const handleClose = () => {
   //   setIsVisible(false);
   // };
-  console.log(bank);
+  console.log(Bank);
   // const data: Array<any> = [
   //   { id: 1, name: "John Doe", age: 28, email: "john@example.com" },
   //   { id: 2, name: "Jane Smith", age: 34, email: "jane@example.com" },
@@ -216,8 +216,8 @@ function Bank() {
           <span>upload bank </span>
         </button>
       </div>
-      {bank?.Bankresponse?.documents &&
-      bank?.Bankresponse?.documents?.length > 0 ? (
+      {Bank?.Bankresponse?.documents &&
+      Bank?.Bankresponse?.documents?.length > 0 ? (
         <>
           <div className="w-full rounded-md flex px-2 py-3 my-5 bg-[#0D0D0D]">
             <Search className="pr-2" />
@@ -228,13 +228,14 @@ function Bank() {
             />
           </div>
           <ul className="w-full relative  flex flex-col border-b-4 border-[#0D0D0D] py-3 gap-3 capitalize">
-            {bank?.filteredBanks &&
-              bank?.filteredBanks.map((bank) => (
+            {Bank?.filteredBanks &&
+              Bank?.filteredBanks.map((bank) => (
                 <li
-                  className={`p-4 cursor-pointer bg-secondary rounded-md hover:text-accent border-2 border-primary transition-[color]  relative flex flex-row items-center justify-between`}
+                  className={`p-4 cursor-pointer bg-secondary rounded-md hover:text-accent border-2 border-primary transition-[color]  relative flex flex-row items-center justify-between overflow-hidden`}
                   key={bank.$id}
                 >
                   <span
+                    style={{ backgroundColor: bank.color }}
                     className={`absolute left-0 h-full w-2 bg-[${bank.color}]`}
                   ></span>
                   <p>{bank.BankName}</p>

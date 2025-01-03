@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { databases, Query } from "../lib/appwrite";
 import { Models } from "appwrite";
-
+import { databaseID, BankCollectionID } from "../lib/env";
 import { useAppContext } from "../context/AppContext";
 
 interface BankState {
@@ -10,7 +10,7 @@ interface BankState {
 }
 export const useGetBanks = () => {
   const { loggedInUser } = useAppContext();
-  const [bank, setBank] = useState<BankState | null>(null);
+  const [Bank, setBank] = useState<BankState | null>(null);
   const [loading, setLoading] = useState(true);
   const getBank = useCallback(async () => {
     if (!loggedInUser) {
@@ -19,8 +19,8 @@ export const useGetBanks = () => {
     }
     try {
       const response = await databases.listDocuments(
-        "6762afef001d0296be29",
-        "676377de0017b54237c7",
+        databaseID,
+        BankCollectionID,
         [Query.equal("usersId", loggedInUser.$id)]
       );
 
@@ -43,5 +43,5 @@ export const useGetBanks = () => {
   useEffect(() => {
     getBank();
   }, [getBank]);
-  return { bank, loading, refetchBanks: getBank };
+  return { Bank, loading, refetchBanks: getBank };
 };

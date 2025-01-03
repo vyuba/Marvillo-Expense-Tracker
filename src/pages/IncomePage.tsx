@@ -5,13 +5,13 @@ import useGetListDocument from "../hooks/getListDocument";
 import toast from "react-hot-toast";
 import { useInteract } from "../context/interactionContext";
 import { Delete } from "lucide-react";
-
+import { transactionCollectionID, databaseID } from "../lib/env";
 function IncomePage() {
   const { active, setActive } = useInteract();
 
   const { loading, documents, refreshFuc } = useGetListDocument(
     "income",
-    "6762b0fe003da2d7768b"
+    transactionCollectionID
   );
 
   if (loading) {
@@ -78,11 +78,7 @@ function IncomePage() {
 
   const handleDelete = async (id: string) => {
     try {
-      await databases.deleteDocument(
-        "6762afef001d0296be29",
-        "6762b0fe003da2d7768b",
-        id
-      );
+      await databases.deleteDocument(databaseID, transactionCollectionID, id);
       await refreshFuc();
       console.log("deleted successfull");
     } catch (err) {

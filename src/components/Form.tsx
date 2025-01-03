@@ -6,6 +6,7 @@ import usePostTransaction from "../hooks/useForm";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useAppContext } from "../context/AppContext";
+import { useGetBanks } from "../hooks/getBanks";
 interface FormProps {
   formName: string;
   active: boolean;
@@ -18,7 +19,7 @@ interface BankDetails {
 
 function Form({ formName, active, setActive }: FormProps) {
   const { loggedInUser } = useAppContext();
-  // const { bank, loading } = useGetBanks();
+  const { Bank } = useGetBanks();
 
   const { loading, postTransaction } = usePostTransaction(formName);
   const [data, setData] = useState({
@@ -27,7 +28,7 @@ function Form({ formName, active, setActive }: FormProps) {
     category: "",
     Date: "2024-12-27",
     user_Id: loggedInUser?.$id,
-    banksId: "676da5d200108e11cba1ff",
+    banksId: "",
   });
   const [bankFormData, setBankFormData] = useState({
     name: "",
@@ -75,7 +76,6 @@ function Form({ formName, active, setActive }: FormProps) {
       setBankData({
         response: response?.documents || undefined, // Safe check for response and documents
       });
-
       console.log(bankData);
     } catch (err) {
       console.log(err);
@@ -120,6 +120,31 @@ function Form({ formName, active, setActive }: FormProps) {
               onChange={handleChange}
             />
           </div>
+          <select
+            className="bg-secondary p-2 outline-none  border-accent border rounded-sm capitalize"
+            name="select bank"
+            id="bank_id"
+            onChange={(e) => {
+              setData((prevData) => ({
+                ...prevData,
+                banksId: e.target.value,
+              }));
+            }}
+          >
+            <option className="" value="access bank">
+              select yout bank
+            </option>
+            <option value={""}>General</option>
+            {Bank?.filteredBanks &&
+              Bank?.filteredBanks.map((bank) => (
+                <option key={bank.$id} value={bank.$id}>
+                  {bank.BankName}
+                </option>
+              ))}
+          </select>
+          <label className="capitalize text-sm" htmlFor="bank_id">
+            optional if you dont have a bank set up already
+          </label>
           <input
             className="bg-secondary p-2 outline-none focus:border-2 border-accent border rounded-sm"
             type="text"
@@ -136,7 +161,7 @@ function Form({ formName, active, setActive }: FormProps) {
                 type: data.type,
                 category: data.category,
                 date: null,
-                user_Id: data.user_Id,
+                user_Id: loggedInUser?.$id,
                 banksId: data.banksId,
                 amount: data.amount,
               });
@@ -163,8 +188,7 @@ function Form({ formName, active, setActive }: FormProps) {
                   },
                 }
               );
-              const interval = setInterval(() => setActive(!active), 2000);
-              clearInterval(interval);
+              setActive(!active);
             }}
             //   type="submit"
             className="bg-accent p-2 w-full outline-none focus:border-2 border-accent border rounded-sm capitalize font-medium absolute bottom-10 "

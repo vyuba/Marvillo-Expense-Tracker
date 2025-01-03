@@ -1,6 +1,5 @@
 // import { useState } from "react";
 import { account, OAuthProvider } from "../lib/appwrite";
-// import Modal from "../components/Modal";
 import { useAppContext } from "../context/AppContext";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
