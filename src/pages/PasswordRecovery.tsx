@@ -8,7 +8,7 @@ function PasswordRecovery() {
       toast.loading("Sending recovery email");
       const result = await account.createRecovery(
         email, // email
-        "https://localhost:3000/newpassword" // url
+        "https://marvillo-expense-tracker.vercel.app/newpassword" // url
       );
       toast.dismiss();
       toast.success("Recovery email sent");
