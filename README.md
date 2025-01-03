@@ -1,6 +1,6 @@
 # Marvillo Expense Tracker
 
-**Marvillo Expense Tracker** is a web application built using **React**, **React Router**, **Tailwind CSS**, **Lucide Dev** for icons, and **Appwrite** for backend services.
+**Marvillo Expense Tracker** is a web application built using **React**,**Recharts**, **React Router**, **Tailwind CSS**, **Lucide Dev** for icons, and **Appwrite** for backend services.
 
 ## Purpose
 
@@ -40,6 +40,7 @@ Isoicons - https://www.isocons.app/
 - **React Router** for navigation between pages.
 - **Tailwind CSS** for fast and responsive styling.
 - **Lucide Dev** for UI icons.
+- **Recharts** for UI Charts.
 - **Appwrite** for backend services including authentication and database management.
 
 ## Installation
