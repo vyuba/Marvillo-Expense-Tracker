@@ -124,7 +124,7 @@ const App = () => {
                   activeNavbar={activeNavbar}
                   setActiveNavbar={setActiveNavbar}
                 />
-                <div className=" pt-24 px-5 md:p-5 flex-1 w-full h-full">
+                <div className=" pt-24 px-5 md:p-5 flex-1 w-full overflow-x-auto  h-full">
                   <Navbar
                     activeNavbar={activeNavbar}
                     setActiveNavbar={setActiveNavbar}

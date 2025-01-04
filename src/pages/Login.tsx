@@ -1,54 +1,23 @@
 // import { useState } from "react";
-import { account } from "../lib/appwrite";
+import { account, OAuthProvider } from "../lib/appwrite";
 import { useAppContext } from "../context/AppContext";
 import { Link, useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
+import { useUser } from "../utils/script";
 function Login() {
   const [loading, setLoading] = useState(false);
+  const { login } = useUser();
   const {
     email,
     setEmail,
     password,
     loggedInUser,
     setPassword,
-    updateLoggedInUser,
     checkUserIsLoggedIn,
   } = useAppContext();
 
   const navigate = useNavigate();
-  async function login(email: string, password: string) {
-    setLoading(true);
-    const loggedIn = await account.createEmailPasswordSession(email, password);
-    console.log(loggedIn);
-    const user = await account.get();
-    updateLoggedInUser({
-      acct: loggedIn,
-      isActive: true,
-      $id: user.$id,
-      $createdAt: user.$createdAt,
-      $updatedAt: user.$updatedAt,
-      name: user.name,
-      email: user.email,
-      password: user.password,
-      hash: user.hash,
-      hashOptions: user.hashOptions,
-      registration: user.registration,
-      status: user.status,
-      labels: user.labels,
-      passwordUpdate: user.passwordUpdate,
-      phone: user.phone,
-      emailVerification: user.emailVerification,
-      phoneVerification: user.phoneVerification,
-      mfa: user.mfa,
-      prefs: user.prefs,
-      targets: user.targets,
-      accessedAt: user.accessedAt,
-    });
-    navigate("/dashboard/home");
-    setLoading(false);
-  }
-
   useEffect(() => {
     checkUserIsLoggedIn(navigate);
   }, [checkUserIsLoggedIn, navigate]);
@@ -64,20 +33,21 @@ function Login() {
         </h1>
       </div>
       <form className="flex flex-col justify-center gap-3 w-full max-w-[360px]">
-        {/* <button
+        <button
           className="bg-secondary mt-5 border text-white text-base font-medium py-3 rounded-3xl capitalize flex items-center justify-center gap-3"
           type="button"
           onClick={async () => {
+            // SignUpGoogle();
             await account.createOAuth2Session(
               OAuthProvider.Google,
-              "https://marvillo-expense-tracker.vercel.app/",
-              "https://marvillo-expense-tracker.vercel.app/Sign up"
+              "https://marvillo-expense-tracker.vercel.app/dashboard/home",
+              "https://marvillo-expense-tracker.vercel.app/Sign%20up"
             );
           }}
         >
           <img className="w-5" src="/google-icon-logo-svgrepo-com.svg" alt="" />
           login with google
-        </button> */}
+        </button>
         <span className="h-[1px] w-full my-5 bg-[#C8BED4]"></span>
         <input
           className="bg-secondary py-3 px-3 rounded-md mb-2"
@@ -127,6 +97,7 @@ function Login() {
                 },
               }
             );
+            setLoading(false);
           }}
         >
           {loading ? "logging" : "login"}

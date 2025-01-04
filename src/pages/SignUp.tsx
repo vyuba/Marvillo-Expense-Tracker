@@ -1,76 +1,19 @@
 // import { useState } from "react";
-import { account, ID, databases } from "../lib/appwrite";
+import { account, OAuthProvider } from "../lib/appwrite";
 import { useAppContext } from "../context/AppContext";
 import { useNavigate } from "react-router";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useUser } from "../utils/script";
 import toast from "react-hot-toast";
 function SignUp() {
-  const [loading, setLoading] = useState(false);
-  const {
-    email,
-    setEmail,
-    password,
-    setPassword,
-    setLoggedInUser,
-    checkUserIsLoggedIn,
-  } = useAppContext();
+  const { email, setEmail, password, setPassword, checkUserIsLoggedIn } =
+    useAppContext();
   const navigate = useNavigate();
   useEffect(() => {
     checkUserIsLoggedIn(navigate);
   }, [checkUserIsLoggedIn, navigate]);
-  async function login(email: string, password: string) {
-    await account.createEmailPasswordSession(email, password);
-    navigate("/dashboard/home");
-    const user = await account.get();
-    setLoggedInUser({
-      isActive: true,
-      acct: null,
-      data: null,
-      $id: user.$id,
-      $createdAt: user.$createdAt,
-      $updatedAt: user.$updatedAt,
-      name: user.name,
-      email: user.email,
-      password: user.password,
-      hash: user.hash,
-      hashOptions: user.hashOptions,
-      registration: user.registration,
-      status: user.status,
-      labels: user.labels,
-      passwordUpdate: user.passwordUpdate,
-      phone: user.phone,
-      emailVerification: user.emailVerification,
-      phoneVerification: user.phoneVerification,
-      mfa: user.mfa,
-      prefs: user.prefs,
-      targets: user.targets,
-      accessedAt: user.accessedAt,
-    });
 
-    return { user };
-  }
-
-  const createAccount = async () => {
-    setLoading(true);
-    try {
-      toast.loading("Creating account...");
-      await account.create(ID.unique(), email, password);
-      // const user = await account.get();
-      const { user } = await login(email, password);
-      await databases.createDocument(
-        "6762afef001d0296be29",
-        "6762b0c6001fed31089b",
-        user.$id,
-        { email: email }
-      );
-      setLoading(false);
-      toast.dismiss();
-      toast.success("Account created successfully");
-    } catch (error) {
-      toast.error(`An error ${error} occurred. Please try again`);
-      setLoading(false);
-    }
-  };
+  const { createAccount, loading } = useUser();
 
   return (
     <div className=" text-white flex-1 h-full px-9 flex flex-col items-center justify-center">
@@ -82,15 +25,15 @@ function SignUp() {
         </h1>
       </div>
       <form className="flex flex-col justify-center gap-3 w-full max-w-[360px]">
-        {/* <button
+        <button
           className="bg-secondary mt-5 border text-white text-base font-medium py-3 rounded-3xl capitalize flex items-center justify-center gap-3"
           type="button"
           onClick={async () => {
             try {
-              account.createOAuth2Session(
+              await account.createOAuth2Session(
                 OAuthProvider.Google,
-                "http://localhost:3000/dashboard/home",
-                "http://localhost:3000/fail"
+                "https://marvillo-expense-tracker.vercel.app/dashboard/home",
+                "https://marvillo-expense-tracker.vercel.app/Sign%20up"
               );
               const session = await account.getSession("current");
               console.log(session);
@@ -101,7 +44,7 @@ function SignUp() {
         >
           <img className="w-5" src="/google-icon-logo-svgrepo-com.svg" alt="" />
           sign up with google
-        </button> */}
+        </button>
         <span className="h-[1px] w-full my-5 bg-[#C8BED4]"></span>
         <input
           className="bg-secondary py-3 px-3 rounded-md mb-2"
@@ -131,8 +74,8 @@ function SignUp() {
         <button
           className="bg-accent text-white text-lg font-medium py-3 rounded-3xl capitalize"
           type="button"
-          onClick={() => {
-            createAccount();
+          onClick={async () => {
+            await createAccount(email, password);
           }}
         >
           {loading ? "signing" : " sign up"}

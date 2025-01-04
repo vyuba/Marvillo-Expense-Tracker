@@ -88,7 +88,7 @@ function InteractionProvider({ children }: LayoutProps) {
 
   if (loading) {
     return (
-      <div className="w-full z-50 fixed inset-0 h-screen flex items-center justify-center font-medium text-xl flex-col bg-background text-white capitalize">
+      <div className="w-full z-[100000000] fixed inset-0 h-screen flex items-center justify-center font-medium text-xl flex-col bg-background text-white capitalize">
         <div className="w-32 ">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
             <radialGradient
