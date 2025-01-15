@@ -40,9 +40,17 @@ function Login() {
             // SignUpGoogle();
             await account.createOAuth2Session(
               OAuthProvider.Google,
-              "https://marvillo-expense-tracker.vercel.app/dashboard/home",
-              "https://marvillo-expense-tracker.vercel.app/Sign%20up"
+              "https://marvillo.ayuba.me/dashboard/home",
+              "https://marvillo.ayuba.me/Sign%20up"
+              // "https://marvillo-expense-tracker.vercel.app/dashboard/home",
+              // "https://marvillo-expense-tracker.vercel.app/Sign%20up"
             );
+            const session = await account.getSession("current");
+
+            // Provider information
+            console.log(session.provider);
+            console.log(session.providerUid);
+            console.log(session.providerAccessToken);
           }}
         >
           <img className="w-5" src="/google-icon-logo-svgrepo-com.svg" alt="" />
