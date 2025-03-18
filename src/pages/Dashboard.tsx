@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAppContext } from "../context/AppContext";
 import { Models } from "appwrite";
 import { databases, Query } from "../lib/appwrite";
+import { databaseID, transactionCollectionID } from "../lib/env";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -35,8 +36,8 @@ function Dashboard() {
       }
       try {
         const response = await databases.listDocuments(
-          "6762afef001d0296be29",
-          "6762b0fe003da2d7768b",
+          databaseID,
+          transactionCollectionID,
           [Query.equal("user_Id", loggedInUser?.$id)]
         );
         // console.log(response); // List of transactions
