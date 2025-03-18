@@ -30,11 +30,16 @@ function SignUp() {
           type="button"
           onClick={async () => {
             try {
-              await account.createOAuth2Session(
+              await account.createOAuth2Token(
                 OAuthProvider.Google,
                 "https://marvillo.ayuba.me/dashboard/home",
                 "https://marvillo.ayuba.me/Sign%20up"
               );
+              // await account.createOAuth2Session(
+              //   OAuthProvider.Google,
+              //   "https://marvillo.ayuba.me/dashboard/home",
+              //   "https://marvillo.ayuba.me/Sign%20up"
+              // );
               const session = await account.getSession("current");
               console.log(session);
             } catch (error) {
