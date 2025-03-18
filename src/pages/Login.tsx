@@ -17,6 +17,13 @@ function Login() {
     checkUserIsLoggedIn,
   } = useAppContext();
 
+  // useEffect(() => {
+  //   const queryString = window.location.search;
+  //   const params = new URLSearchParams(queryString);
+  //   const userId = params.get("userId");
+  //   const secret = params.get("secret");
+  // }, []);
+
   const navigate = useNavigate();
   useEffect(() => {
     checkUserIsLoggedIn(navigate);
@@ -38,19 +45,22 @@ function Login() {
           type="button"
           onClick={async () => {
             // SignUpGoogle();
-            await account.createOAuth2Session(
+            await account.createOAuth2Token(
               OAuthProvider.Google,
-              "https://marvillo.ayuba.me/dashboard/home",
+              "https://marvillo.ayuba.me/",
               "https://marvillo.ayuba.me/Sign%20up"
-              // "https://marvillo-expense-tracker.vercel.app/dashboard/home",
-              // "https://marvillo-expense-tracker.vercel.app/Sign%20up"
             );
-            const session = await account.getSession("current");
+            // await account.createOAuth2Session(
+            //   OAuthProvider.Google,
+            //   "https://marvillo.ayuba.me/dashboard/home",
+            //   "https://marvillo.ayuba.me/Sign%20up"
+            // );
+            // const session = await account.getSession("current");
 
-            // Provider information
-            console.log(session.provider);
-            console.log(session.providerUid);
-            console.log(session.providerAccessToken);
+            // // Provider information
+            // console.log(session.provider);
+            // console.log(session.providerUid);
+            // console.log(session.providerAccessToken);
           }}
         >
           <img className="w-5" src="/google-icon-logo-svgrepo-com.svg" alt="" />
