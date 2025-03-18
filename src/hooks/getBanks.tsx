@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { databases, Query } from "../lib/appwrite";
 import { Models } from "appwrite";
-import { databaseID, BankCollectionID } from "../lib/env";
+import {
+  databaseID,
+  BankCollectionID,
+  transactionCollectionID,
+} from "../lib/env";
 import { useAppContext } from "../context/AppContext";
 
 interface BankState {
@@ -30,8 +34,8 @@ export const useGetBanks = () => {
       //   (bank) => bank.usersId === loggedInUser.$id
       // );
       const Bankresponse = await databases.listDocuments(
-        "6762afef001d0296be29",
-        "6762b0fe003da2d7768b"
+        databaseID,
+        transactionCollectionID
       );
       console.log(Bankresponse);
       setBank({ filteredBanks: response.documents, Bankresponse });

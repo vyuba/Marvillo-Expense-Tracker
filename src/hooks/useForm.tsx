@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { databases, ID } from "../lib/appwrite";
+import { transactionCollectionID, databaseID } from "../lib/env";
 const usePostTransaction = () => {
   const [loading, setLoading] = useState<boolean>(true);
   // if (!loggedInUser) {
@@ -11,8 +12,8 @@ const usePostTransaction = () => {
   const postTransaction = async (data: object) => {
     try {
       const response = await databases.createDocument(
-        "6762afef001d0296be29",
-        "6762b0fe003da2d7768b",
+        databaseID,
+        transactionCollectionID,
         ID.unique(),
         data
       );
