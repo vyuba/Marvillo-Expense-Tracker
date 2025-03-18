@@ -41,7 +41,7 @@ function InteractionProvider({ children }: LayoutProps) {
       //   window.location.href = "/";
       // }
       const loggedIn = await account.getSession("current");
-      console.log(loggedIn);
+      // console.log(loggedIn);
       updateLoggedInUser({
         acct: loggedIn,
         isActive: true,
@@ -70,7 +70,7 @@ function InteractionProvider({ children }: LayoutProps) {
     } catch (error: unknown) {
       setLoading(false);
       toast.error(`${error}`);
-      console.log(error);
+      // console.log(error);
       // if (!loggedInUser && !loggedInUser?.acct?.current) {
       //   alert("You must be logged in to access this page!");
       //   window.location.href = "/";
@@ -150,7 +150,7 @@ function InteractionProvider({ children }: LayoutProps) {
     );
   }
 
-  console.log(active);
+  // console.log(active);
 
   return (
     <interactContext.Provider

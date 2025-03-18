@@ -23,10 +23,30 @@ function Login() {
     const params = new URLSearchParams(queryString);
     const userId = params.get("userId");
     const secret = params.get("secret");
-    handleCallback(userId, secret);
+    toast.promise(
+      handleCallback(userId, secret),
+      {
+        loading: "Logging",
+        success: () => `Successfully Logged in ${loggedInUser?.name}`,
+        error: (err) => `error: ${err.toString()}`,
+      },
+      {
+        style: {
+          minWidth: "150px",
+        },
+        success: {
+          duration: 3000,
+          icon: "✅",
+        },
+        error: {
+          duration: 3000,
+          icon: "💀",
+        },
+      }
+    );
 
     checkUserIsLoggedIn(navigate);
-  }, [checkUserIsLoggedIn, navigate, handleCallback]);
+  }, [checkUserIsLoggedIn, navigate, handleCallback, loggedInUser?.name]);
 
   return (
     <div className=" text-white flex-1 h-full px-9 flex flex-col items-center justify-center">
@@ -43,23 +63,11 @@ function Login() {
           className="bg-secondary mt-5 border text-white text-base font-medium py-3 rounded-3xl capitalize flex items-center justify-center gap-3"
           type="button"
           onClick={async () => {
-            // SignUpGoogle();
             await account.createOAuth2Token(
               OAuthProvider.Google,
               "https://marvillo.ayuba.me/",
               "https://marvillo.ayuba.me/Sign%20up"
             );
-            // await account.createOAuth2Session(
-            //   OAuthProvider.Google,
-            //   "https://marvillo.ayuba.me/dashboard/home",
-            //   "https://marvillo.ayuba.me/Sign%20up"
-            // );
-            // const session = await account.getSession("current");
-
-            // // Provider information
-            // console.log(session.provider);
-            // console.log(session.providerUid);
-            // console.log(session.providerAccessToken);
           }}
         >
           <img className="w-5" src="/google-icon-logo-svgrepo-com.svg" alt="" />

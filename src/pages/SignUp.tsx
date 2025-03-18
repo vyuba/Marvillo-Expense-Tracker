@@ -6,14 +6,45 @@ import { useEffect } from "react";
 import { useUser } from "../utils/script";
 import toast from "react-hot-toast";
 function SignUp() {
-  const { email, setEmail, password, setPassword, checkUserIsLoggedIn } =
-    useAppContext();
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    checkUserIsLoggedIn,
+    loggedInUser,
+  } = useAppContext();
   const navigate = useNavigate();
-  useEffect(() => {
-    checkUserIsLoggedIn(navigate);
-  }, [checkUserIsLoggedIn, navigate]);
+  const { createAccount, loading, handleCallback } = useUser();
 
-  const { createAccount, loading } = useUser();
+  useEffect(() => {
+    const queryString = window.location.search;
+    const params = new URLSearchParams(queryString);
+    const userId = params.get("userId");
+    const secret = params.get("secret");
+    toast.promise(
+      handleCallback(userId, secret),
+      {
+        loading: "Logging",
+        success: () => `Successfully Logged in ${loggedInUser?.name}`,
+        error: (err) => `error: ${err.toString()}`,
+      },
+      {
+        style: {
+          minWidth: "150px",
+        },
+        success: {
+          duration: 3000,
+          icon: "✅",
+        },
+        error: {
+          duration: 3000,
+          icon: "💀",
+        },
+      }
+    );
+    checkUserIsLoggedIn(navigate);
+  }, [checkUserIsLoggedIn, navigate, handleCallback, loggedInUser?.name]);
 
   return (
     <div className=" text-white flex-1 h-full px-9 flex flex-col items-center justify-center">
@@ -32,16 +63,9 @@ function SignUp() {
             try {
               await account.createOAuth2Token(
                 OAuthProvider.Google,
-                "https://marvillo.ayuba.me/dashboard/home",
+                "https://marvillo.ayuba.me/",
                 "https://marvillo.ayuba.me/Sign%20up"
               );
-              // await account.createOAuth2Session(
-              //   OAuthProvider.Google,
-              //   "https://marvillo.ayuba.me/dashboard/home",
-              //   "https://marvillo.ayuba.me/Sign%20up"
-              // );
-              const session = await account.getSession("current");
-              console.log(session);
             } catch (error) {
               toast.error(`An error ${error} occurred. Please try again`);
             }
@@ -65,16 +89,6 @@ function SignUp() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        {/* <input
-      type="text"
-      placeholder="Name"
-      value={name}
-      onChange={(e) => setName(e.target.value)}
-    /> */}
-        {/* 
-    <button type="button" onClick={() => login(email, password)}>
-      Login
-    </button> */}
 
         <button
           className="bg-accent text-white text-lg font-medium py-3 rounded-3xl capitalize"
@@ -85,16 +99,6 @@ function SignUp() {
         >
           {loading ? "signing" : " sign up"}
         </button>
-
-        {/* <button
-          type="button"
-          onClick={async () => {
-            await account.deleteSession("current");
-            setLoggedInUser(null);
-          }}
-        >
-          Logout
-        </button> */}
       </form>
       <span className="pt-6">
         Already have an account?{" "}
