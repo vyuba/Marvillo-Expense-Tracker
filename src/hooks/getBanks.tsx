@@ -28,7 +28,7 @@ export const useGetBanks = () => {
         [Query.equal("usersId", loggedInUser.$id)]
       );
 
-      console.log(response);
+      // console.log(response);
       // Filter or resolve relationships manually
       // const filteredBanks = response.documents.filter(
       //   (bank) => bank.usersId === loggedInUser.$id
@@ -37,7 +37,7 @@ export const useGetBanks = () => {
         databaseID,
         transactionCollectionID
       );
-      console.log(Bankresponse);
+      // console.log(Bankresponse);
       setBank({ filteredBanks: response.documents, Bankresponse });
       setLoading(false);
     } catch (error) {
