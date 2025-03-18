@@ -7,6 +7,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useAppContext } from "../context/AppContext";
 import { useGetBanks } from "../hooks/getBanks";
+import { BankCollectionID, databaseID } from "../lib/env";
 interface FormProps {
   formName: string;
   active: boolean;
@@ -69,8 +70,8 @@ function Form({ formName, active, setActive, refreshFuc }: FormProps) {
   const handleSubmit = async (BankDetail: object) => {
     try {
       const response = await databases.createDocument(
-        "6762afef001d0296be29",
-        "676377de0017b54237c7",
+        databaseID,
+        BankCollectionID,
         ID.unique(),
         BankDetail
       );
