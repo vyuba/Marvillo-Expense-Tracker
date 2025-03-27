@@ -6,13 +6,50 @@ import toast from "react-hot-toast";
 import { useInteract } from "../context/interactionContext";
 import { Delete } from "lucide-react";
 import { transactionCollectionID, databaseID } from "../lib/env";
+import { useEffect } from "react";
+import { Models } from "appwrite";
+import { client } from "../lib/appwrite";
 function IncomePage() {
   const { active, setActive } = useInteract();
 
-  const { loading, documents, refreshFuc } = useGetListDocument(
+  const { loading, documents, setDocuments } = useGetListDocument(
     "income",
     transactionCollectionID
   );
+
+  useEffect(() => {
+    // Subscribe to files channel
+    const unsubscribe = client.subscribe(
+      `databases.${databaseID}.collections.${transactionCollectionID}.documents`,
+      (response) => {
+        if (
+          response.events.includes(
+            "databases.*.collections.*.documents.*.create"
+          )
+        ) {
+          console.log(response.payload);
+          setDocuments((prev: Models.Document[]) => [
+            ...prev,
+            response.payload as Models.Document,
+          ]);
+        }
+        if (
+          response.events.includes(
+            "databases.*.collections.*.documents.*.delete"
+          )
+        ) {
+          console.log(response.payload);
+          setDocuments((prev: Models.Document[]) =>
+            prev.filter(
+              (doc) => doc.$id !== (response.payload as Models.Document).$id
+            )
+          );
+        }
+      }
+    );
+
+    return () => unsubscribe();
+  }, [setDocuments]);
 
   if (loading) {
     return (
@@ -79,43 +116,14 @@ function IncomePage() {
   const handleDelete = async (id: string) => {
     try {
       await databases.deleteDocument(databaseID, transactionCollectionID, id);
-      await refreshFuc();
       console.log("deleted successfull");
     } catch (err) {
       console.log(err);
     }
   };
-
-  //   const response = await postTransaction({
-  //     amount: data.amount,
-  //     type: data.type,
-  //     category: data.category,
-  //     date: null,
-  //     user_Id: [data.user_Id],
-  //     banksId: [data.banksId],
-  //   });
-  // const handleSubmit = async (data) => {
-  //   try {
-  //     const response = await databases.createDocument(
-  //       "6762afef001d0296be29",
-  //       "6762b0fe003da2d7768b",
-  //       ID.unique(),
-  //       data
-  //     );
-  //     console.log("Transaction successful:", response);
-  //     setInterval(() => handleFormActive(), 2000);
-  //   } catch (err) {
-  //     console.log("Transaction failed:", err);
-  //   }
-  // };
   return (
     <div className="w-full relative">
-      <Form
-        active={active}
-        refreshFuc={refreshFuc}
-        setActive={setActive}
-        formName={"income"}
-      />
+      <Form active={active} setActive={setActive} formName={"income"} />
       <div className="flex flex-row w-full items-center justify-between">
         <span className="capitalize text-lg font-medium">income</span>
         <button
@@ -244,7 +252,7 @@ function IncomePage() {
           </div>
         </>
       ) : (
-        <div className="w-full h-[calc(100lvh-80px)] flex items-center justify-center flex-col gap-5">
+        <div className="w-full h-[calc(100lvh-200px)] flex items-center justify-center flex-col gap-5">
           <img className="w-52  md:w-64" src={transactionIcon} alt="" />
           <span className="capitalize font-medium text-lg">
             you dont have any income transaction details yet

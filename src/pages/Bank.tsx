@@ -1,66 +1,56 @@
-// import { useState } from "react";
 import { useGetBanks } from "../hooks/getBanks";
-import { Search } from "lucide-react";
+import { DeleteIcon, Search } from "lucide-react";
 import bankIcon from "../assets/bank.svg";
-// import { databases, ID } from "../lib/appwrite";
-// import { useAppContext } from "../context/AppContext";
-// import { Models } from "appwrite";
 import Form from "../components/Form";
 import { useInteract } from "../context/interactionContext";
-
-// interface BankDetails {
-//   response: Models.DocumentList<Models.Document> | undefined;
-// }
+import { useEffect } from "react";
+import { client } from "../lib/appwrite";
+import { BankCollectionID, databaseID } from "../lib/env";
+import { Models } from "appwrite";
+import toast from "react-hot-toast";
 
 function Bank() {
-  const { Bank, loading } = useGetBanks();
+  const { Bank, loading, setBank, deleteBank } = useGetBanks();
   // const { loggedInUser } = useAppContext();
   // const [acctNo, setAcctNo] = useState<string>();
   // const [BankName, setBankName] = useState<string>();
   const { active, setActive } = useInteract();
-  // const [active, setActive] = useState({
-  //   id: 0,
-  //   active: 0,
-  //   left: 0,
-  // });
-  // const [bankDetails, setBankDetails] = useState<BankDetails>({
-  //   response: undefined,
-  // });
-  // const [isVisible, setIsVisible] = useState(false);
+  useEffect(() => {
+    const unsubscribe = client.subscribe(
+      `databases.${databaseID}.collections.${BankCollectionID}.documents`,
+      (response) => {
+        if (
+          response.events.includes(
+            "databases.*.collections.*.documents.*.create"
+          )
+        ) {
+          setBank((prev) => ({
+            ...(prev || { filteredBanks: [], Bankresponse: null }),
+            filteredBanks: [
+              ...(prev?.filteredBanks || []),
+              response.payload as Models.Document,
+            ],
+          }));
+        }
+        if (
+          response.events.includes(
+            "databases.*.collections.*.documents.*.delete"
+          )
+        ) {
+          setBank((prev) => ({
+            ...(prev || { filteredBanks: [], Bankresponse: null }),
+            filteredBanks:
+              prev?.filteredBanks?.filter(
+                (bank) =>
+                  bank?.$id !== (response.payload as Models.Document)?.$id
+              ) || [],
+          }));
+        }
+      }
+    );
 
-  // const handleButtonClick = () => {
-  //   setIsVisible(true);
-  // };
-
-  // const handleClose = () => {
-  //   setIsVisible(false);
-  // };
-  // console.log(Bank);
-  // const data: Array<any> = [
-  //   { id: 1, name: "John Doe", age: 28, email: "john@example.com" },
-  //   { id: 2, name: "Jane Smith", age: 34, email: "jane@example.com" },
-  //   { id: 3, name: "Alice Johnson", age: 25, email: "alice@example.com" },
-  //   { id: 4, name: "Bob Brown", age: 45, email: "bob@example.com" },
-  //   { id: 5, name: "Bob Brown", age: 45, email: "bob@example.com" },
-  //   { id: 6, name: "Bob Brown", age: 45, email: "bob@example.com" },
-  // ];
-
-  // const updateBank = (updates) => {
-  //   setActive((prevState) => ({
-  //     ...prevState,
-  //     ...updates,
-  //   }));
-  // };
-
-  // const switchBank = (index) => {
-  //   setActive((prevState) => ({
-  //     ...prevState,
-  //     ...{ id: index, active: index, left: index * 20 },
-  //   }));
-  // };
-
-  // const targetId = bank?.response.documents[active.id].$id;
-  // console.log(targetId);
+    return () => unsubscribe();
+  }, [setBank]);
 
   if (loading) {
     return (
@@ -124,38 +114,6 @@ function Bank() {
     );
   }
 
-  // const handleSubmit = async (BankDetail: object) => {
-  //   try {
-  //     const response = await databases.createDocument(
-  //       "6762afef001d0296be29",
-  //       "676377de0017b54237c7",
-  //       ID.unique(),
-  //       BankDetail
-  //     );
-  //     setBankDetails({
-  //       response: response?.documents || undefined, // Safe check for response and documents
-  //     });
-
-  //     console.log(bankDetails);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-
-  // const handleDelete = async (id) => {
-  //   try {
-  //     await databases.deleteDocument(
-  //       "6762afef001d0296be29",
-  //       "6762b0fe003da2d7768b",
-  //       id
-  //     );
-  //     await refetchBanks();
-  //     console.log("deleted successfull");
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-
   return (
     <div className="w-full h-full overflow-x-hidden relative">
       <Form active={active} setActive={setActive} formName={"bank"} />
@@ -216,8 +174,7 @@ function Bank() {
           <span>upload bank </span>
         </button>
       </div>
-      {Bank?.Bankresponse?.documents &&
-      Bank?.Bankresponse?.documents?.length > 0 ? (
+      {Bank?.filteredBanks && Bank?.filteredBanks?.length > 0 ? (
         <>
           <div className="w-full rounded-md flex px-2 py-3 my-5 bg-[#0D0D0D]">
             <Search className="pr-2" />
@@ -231,21 +188,53 @@ function Bank() {
             {Bank?.filteredBanks &&
               Bank?.filteredBanks.map((bank) => (
                 <li
-                  className={`p-4 cursor-pointer bg-secondary rounded-md hover:text-accent border-2 border-primary transition-[color]  relative flex flex-row items-center justify-between overflow-hidden`}
+                  className={` cursor-pointer bg-secondary rounded-md hover:text-accent border-2 border-primary transition-[color]  relative flex flex-row items-center justify-between overflow-hidden`}
                   key={bank.$id}
                 >
                   <span
                     style={{ backgroundColor: bank.color }}
                     className={`absolute left-0 h-full w-2 bg-[${bank.color}]`}
                   ></span>
-                  <p>{bank.BankName}</p>
-                  <p>
-                    {" "}
-                    {new Intl.NumberFormat("en-US", {
-                      style: "currency",
-                      currency: "USD",
-                    }).format(bank.amount)}
-                  </p>
+                  <div className="w-full p-4 h-full">
+                    <p>{bank.BankName}</p>
+                    <p>
+                      {" "}
+                      {new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                      }).format(bank.amount)}
+                    </p>
+                  </div>
+                  <div
+                    onClick={() => {
+                      toast.promise(
+                        deleteBank(bank.$id),
+                        {
+                          loading: "Loading",
+                          success: () =>
+                            `Successfully deleted ${bank.$id} bank`,
+                          error: (err: string) =>
+                            `This error just happened: ${err.toString()}`,
+                        },
+                        {
+                          style: {
+                            minWidth: "150px",
+                          },
+                          success: {
+                            duration: 5000,
+                            icon: "🔥",
+                          },
+                          error: {
+                            duration: 5000,
+                            icon: "💀",
+                          },
+                        }
+                      );
+                    }}
+                    className="bg-accent w-fit h-full py-7 px-4"
+                  >
+                    <DeleteIcon />
+                  </div>
                 </li>
               ))}
           </ul>
@@ -291,7 +280,7 @@ function Bank() {
           </div>
         </>
       ) : (
-        <div className="w-full h-[calc(100lvh-80px)] flex items-center justify-center flex-col gap-5">
+        <div className="w-full h-[calc(100lvh-200px)] flex items-center justify-center flex-col gap-5">
           <img className="w-64" src={bankIcon} alt="" />
           <span className="capitalize font-medium text-lg">
             you dont have any bank details yet

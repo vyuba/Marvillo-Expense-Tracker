@@ -8,15 +8,16 @@ import {
 } from "../lib/env";
 import { useAppContext } from "../context/AppContext";
 
-interface BankState {
+export interface BankState {
   filteredBanks: Models.Document[] | null;
   Bankresponse: Models.DocumentList<Models.Document> | null; // Replace `any` with a more specific type if you know it
 }
 export const useGetBanks = () => {
   const { loggedInUser } = useAppContext();
   const [Bank, setBank] = useState<BankState | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const getBank = useCallback(async () => {
+    setLoading(true);
     if (!loggedInUser) {
       console.error("User is not logged in");
       return;
@@ -27,12 +28,6 @@ export const useGetBanks = () => {
         BankCollectionID,
         [Query.equal("usersId", loggedInUser.$id)]
       );
-
-      // console.log(response);
-      // Filter or resolve relationships manually
-      // const filteredBanks = response.documents.filter(
-      //   (bank) => bank.usersId === loggedInUser.$id
-      // );
       const Bankresponse = await databases.listDocuments(
         databaseID,
         transactionCollectionID
@@ -42,10 +37,15 @@ export const useGetBanks = () => {
       setLoading(false);
     } catch (error) {
       console.error("Error fetching banks", error);
+      setLoading(false);
     }
   }, [loggedInUser]);
+
+  const deleteBank = async (id: string) => {
+    await databases.deleteDocument(databaseID, BankCollectionID, id);
+  };
   useEffect(() => {
     getBank();
   }, [getBank]);
-  return { Bank, loading, refetchBanks: getBank };
+  return { Bank, loading, setBank, deleteBank };
 };

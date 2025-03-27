@@ -5,9 +5,10 @@ import { Link, useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { useUser } from "../utils/script";
+import { apiUrl } from "../lib/env";
 function Login() {
   const [loading, setLoading] = useState(false);
-  const { login, handleCallback } = useUser();
+  const { login } = useUser();
   const {
     email,
     setEmail,
@@ -19,34 +20,8 @@ function Login() {
 
   const navigate = useNavigate();
   useEffect(() => {
-    const queryString = window.location.search;
-    const params = new URLSearchParams(queryString);
-    const userId = params.get("userId");
-    const secret = params.get("secret");
-    toast.promise(
-      handleCallback(userId, secret),
-      {
-        loading: "Logging",
-        success: () => `Successfully Logged in ${loggedInUser?.name}`,
-        error: (err) => `error: ${err.toString()}`,
-      },
-      {
-        style: {
-          minWidth: "150px",
-        },
-        success: {
-          duration: 3000,
-          icon: "✅",
-        },
-        error: {
-          duration: 3000,
-          icon: "💀",
-        },
-      }
-    );
-
     checkUserIsLoggedIn(navigate);
-  }, [checkUserIsLoggedIn, navigate, handleCallback, loggedInUser?.name]);
+  }, [checkUserIsLoggedIn, navigate, loggedInUser?.name]);
 
   return (
     <div className=" text-white flex-1 h-full px-9 flex flex-col items-center justify-center">
@@ -65,8 +40,8 @@ function Login() {
           onClick={async () => {
             await account.createOAuth2Token(
               OAuthProvider.Google,
-              "https://marvillo.ayuba.me/",
-              "https://marvillo.ayuba.me/Sign%20up"
+              `${apiUrl}/callbackSuccess`,
+              `${apiUrl}/Sign%20up`
             );
           }}
         >

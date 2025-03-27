@@ -16,6 +16,7 @@ import Navbar from "./components/Navbar";
 import PasswordRecovery from "./pages/PasswordRecovery";
 import NewPassword from "./pages/NewPassword";
 import ComingSoon from "./pages/ComingSoon";
+import CallbackPage from "./pages/CallbackPage";
 // import { account } from "./lib/appwrite";
 // import Profile from "./pages/Profile";
 // import { useAppContext } from "./context/AppContext";
@@ -112,6 +113,15 @@ const App = () => {
             element={
               <div className="bg-primary w-screen h-screen flex flex-row">
                 <NewPassword />
+                <div className="hidden md:block flex-1 h-full bg-accent"></div>
+              </div>
+            }
+          />
+          <Route
+            path="/callbackSuccess"
+            element={
+              <div className="bg-primary w-screen h-screen flex flex-row">
+                <CallbackPage />
                 <div className="hidden md:block flex-1 h-full bg-accent"></div>
               </div>
             }

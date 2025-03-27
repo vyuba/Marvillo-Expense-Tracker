@@ -40,7 +40,12 @@ const useGetListDocument = (formName: string, collectionId: string) => {
     fetchDocuments();
   }, [fetchDocuments]);
 
-  return { loading, error, documents, refreshFuc: fetchDocuments };
+  return {
+    loading,
+    error,
+    documents,
+    setDocuments,
+  };
 };
 
 export default useGetListDocument;

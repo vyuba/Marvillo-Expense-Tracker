@@ -1,29 +1,25 @@
 import { X } from "lucide-react";
-import { databases, ID } from "../lib/appwrite";
-
-import { Models } from "appwrite";
 import usePostTransaction from "../hooks/useForm";
 import { useState } from "react";
+import { Models } from "appwrite";
 import toast from "react-hot-toast";
 import { useAppContext } from "../context/AppContext";
 import { useGetBanks } from "../hooks/getBanks";
-import { BankCollectionID, databaseID } from "../lib/env";
+import { useNavigate } from "react-router";
 interface FormProps {
   formName: string;
   active: boolean;
-  refreshFuc?: () => void;
   setActive: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-interface BankDetails {
-  response: Models.DocumentList<Models.Document> | undefined;
-}
-
-function Form({ formName, active, setActive, refreshFuc }: FormProps) {
+function Form({ formName, active, setActive }: FormProps) {
   const { loggedInUser } = useAppContext();
   const { Bank } = useGetBanks();
+  const [selectedBank, setSelectedBank] = useState<Models.Document | null>(
+    null
+  );
 
-  const { loading, postTransaction } = usePostTransaction();
+  const { loading, postTransaction, postBank } = usePostTransaction();
   const [data, setData] = useState({
     amount: "",
     type: formName,
@@ -39,9 +35,7 @@ function Form({ formName, active, setActive, refreshFuc }: FormProps) {
     user_Id: loggedInUser?.$id,
   });
 
-  const [bankData, setBankData] = useState<BankDetails>({
-    response: undefined,
-  });
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -65,23 +59,6 @@ function Form({ formName, active, setActive, refreshFuc }: FormProps) {
       ...prevData,
       [name]: value,
     }));
-  };
-
-  const handleSubmit = async (BankDetail: object) => {
-    try {
-      const response = await databases.createDocument(
-        databaseID,
-        BankCollectionID,
-        ID.unique(),
-        BankDetail
-      );
-      setBankData({
-        response: response?.documents || undefined, // Safe check for response and documents
-      });
-      console.log(bankData);
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   return (
@@ -126,23 +103,34 @@ function Form({ formName, active, setActive, refreshFuc }: FormProps) {
             className="bg-secondary p-2 outline-none  border-accent border rounded-sm capitalize"
             name="select bank"
             id="bank_id"
+            value={data.banksId}
             onChange={(e) => {
+              if (e.target.value === "create") {
+                navigate("/dashboard/bank");
+              }
               setData((prevData) => ({
                 ...prevData,
                 banksId: e.target.value,
               }));
+              const filteredBank = Bank?.filteredBanks?.find(
+                (bank) => bank.$id === e.target.value
+              );
+
+              setSelectedBank(filteredBank || null);
             }}
           >
-            <option className="" value="access bank">
+            <option className="" value="default">
               select yout bank
             </option>
-            <option value={""}>General</option>
             {Bank?.filteredBanks &&
               Bank?.filteredBanks.map((bank) => (
                 <option key={bank.$id} value={bank.$id}>
                   {bank.BankName}
                 </option>
               ))}
+            <option className="" value="create">
+              create a bank
+            </option>
           </select>
           <label className="capitalize text-sm" htmlFor="bank_id">
             optional if you dont have a bank set up already
@@ -159,44 +147,63 @@ function Form({ formName, active, setActive, refreshFuc }: FormProps) {
             value="Submit"
             onClick={(e) => {
               e.preventDefault();
-              const myPromise = postTransaction({
+              const formDetails = {
                 type: data.type,
                 category: data.category,
                 date: null,
                 user_Id: loggedInUser?.$id,
                 banksId: data.banksId,
-                amount: data.amount,
-              });
-              toast.promise(
-                myPromise,
-                {
-                  loading: "Loading",
-                  success: () =>
-                    `Successfully added to your ${formName} transaction`,
-                  error: (err: string) =>
-                    `This error just happened: ${err.toString()}`,
-                },
-                {
-                  style: {
-                    minWidth: "150px",
+                amount: Number(data.amount),
+              };
+              if (data.amount === "") {
+                toast.error(`Put in your  ${data.type} amount`);
+                return;
+              }
+              if (selectedBank) {
+                const myPromise = postTransaction({
+                  formDetails,
+                  selectedBank,
+                });
+                toast.promise(
+                  myPromise,
+                  {
+                    loading: "Loading",
+                    success: () =>
+                      `Successfully added to your ${formName} transaction`,
+                    error: (err: string) =>
+                      `This error just happened: ${err.toString()}`,
                   },
-                  success: {
-                    duration: 5000,
-                    icon: "🔥",
-                  },
-                  error: {
-                    duration: 5000,
-                    icon: "💀",
-                  },
-                }
-              );
-              refreshFuc?.();
-              setActive(!active);
+                  {
+                    style: {
+                      minWidth: "150px",
+                    },
+                    success: {
+                      duration: 5000,
+                      icon: "🔥",
+                    },
+                    error: {
+                      duration: 5000,
+                      icon: "💀",
+                    },
+                  }
+                );
+                setActive(!active);
+                setData({
+                  amount: "",
+                  type: formName,
+                  category: "",
+                  Date: "2024-12-27",
+                  user_Id: loggedInUser?.$id,
+                  banksId: "default",
+                });
+              } else {
+                toast.error("Create a bank");
+              }
             }}
             //   type="submit"
             className="bg-accent p-2 w-full outline-none focus:border-2 border-accent border rounded-sm capitalize font-medium absolute bottom-10 "
           >
-            {loading ? "submit" : "submiting"}
+            {loading ? "submiting" : "submit"}
           </button>
         </form>
       ) : (
@@ -247,10 +254,20 @@ function Form({ formName, active, setActive, refreshFuc }: FormProps) {
               value="Submit"
               onClick={(e) => {
                 e.preventDefault();
-                const myPromise = handleSubmit({
+
+                if (bankFormData.amount === "" || bankFormData.name === "") {
+                  toast.error("Fill in all your details");
+                  return;
+                }
+
+                if (bankFormData.color === "") {
+                  toast.error("Pick a color to represent your bank");
+                  return;
+                }
+                const myPromise = postBank({
                   BankName: bankFormData.name,
                   usersId: bankFormData.user_Id,
-                  amount: bankFormData.amount,
+                  amount: Number(bankFormData.amount),
                   color: bankFormData.color,
                 });
 
@@ -277,13 +294,18 @@ function Form({ formName, active, setActive, refreshFuc }: FormProps) {
                     },
                   }
                 );
-                const interval = setInterval(() => setActive(!active), 2000);
-                clearInterval(interval);
+                setBankFormData({
+                  name: "",
+                  color: "",
+                  amount: "",
+                  user_Id: loggedInUser?.$id,
+                });
+                setActive(!active);
               }}
               //   type="submit"
               className="bg-accent p-2 w-full outline-none focus:border-2 border-accent border rounded-sm capitalize font-medium absolute bottom-10 "
             >
-              {loading ? "submit" : "submiting"}
+              {loading ? "submiting" : "submit"}
             </button>
           </form>
         </div>

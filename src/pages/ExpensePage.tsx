@@ -3,15 +3,52 @@ import Form from "../components/Form";
 import { useInteract } from "../context/interactionContext";
 import transactionIcon from "../assets/account_balance.svg";
 import useGetListDocument from "../hooks/getListDocument";
-import { databases } from "../lib/appwrite";
+import { client, databases } from "../lib/appwrite";
 import { Delete } from "lucide-react";
 import { transactionCollectionID, databaseID } from "../lib/env";
+import { useEffect } from "react";
+import { Models } from "appwrite";
 function ExpensePage() {
   const { active, setActive } = useInteract();
-  const { loading, documents, refreshFuc } = useGetListDocument(
+  const { loading, documents, setDocuments } = useGetListDocument(
     "expense",
     transactionCollectionID
   );
+
+  useEffect(() => {
+    const unsubscribe = client.subscribe(
+      `databases.${databaseID}.collections.${transactionCollectionID}.documents`,
+      (response) => {
+        if (
+          response.events.includes(
+            "databases.*.collections.*.documents.*.create"
+          )
+        ) {
+          console.log("Document created:", response);
+          setDocuments((prev: Models.Document[]) => [
+            ...prev,
+            response.payload as Models.Document,
+          ]);
+        }
+        if (
+          response.events.includes(
+            "databases.*.collections.*.documents.*.delete"
+          )
+        ) {
+          console.log("Document deleted:", response);
+          setDocuments((prev: Models.Document[]) =>
+            prev.filter(
+              (doc: Models.Document) =>
+                doc.$id !== (response.payload as Models.Document).$id
+            )
+          );
+        }
+      }
+    );
+    return () => {
+      unsubscribe();
+    };
+  }, [setDocuments]);
 
   if (loading) {
     return (
@@ -78,7 +115,6 @@ function ExpensePage() {
   const handleDelete = async (id: string) => {
     try {
       await databases.deleteDocument(databaseID, transactionCollectionID, id);
-      await refreshFuc();
       console.log("deleted successfull");
     } catch (err) {
       console.log(err);
@@ -86,12 +122,7 @@ function ExpensePage() {
   };
   return (
     <div className=" w-full relative">
-      <Form
-        active={active}
-        refreshFuc={refreshFuc}
-        setActive={setActive}
-        formName={"expense"}
-      />
+      <Form active={active} setActive={setActive} formName={"expense"} />
       <div className="flex flex-row w-full items-center justify-between">
         <span className="capitalize text-lg font-medium">expense</span>
         <button
@@ -220,7 +251,7 @@ function ExpensePage() {
           </div>
         </>
       ) : (
-        <div className="w-full h-[calc(100lvh-80px)] flex items-center justify-center flex-col gap-5">
+        <div className="w-full h-[calc(100lvh-200px)] flex items-center justify-center flex-col gap-5">
           <img className="w-52  md:w-64" src={transactionIcon} alt="" />
           <span className="capitalize font-medium text-lg">
             you dont have any income transaction details yet

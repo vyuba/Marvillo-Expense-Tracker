@@ -15,6 +15,8 @@ interface IAppContext {
   setLoggedInUser: React.Dispatch<React.SetStateAction<ILoggedInUser | null>>;
   updateLoggedInUser: (updates: Partial<ILoggedInUser>) => void;
   checkUserIsLoggedIn: (navigate: (path: string) => void) => void;
+  currency: string;
+  setCurrency: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const appContext = createContext<IAppContext | null>(null);
@@ -80,6 +82,7 @@ const AppProvider = ({ children }: LayoutProps) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [name, setName] = useState<string>("");
+  const [currency, setCurrency] = useState<string>("");
 
   const updateLoggedInUser = (updates: Partial<ILoggedInUser>) => {
     setLoggedInUser((prevUser) => {
@@ -112,6 +115,8 @@ const AppProvider = ({ children }: LayoutProps) => {
         setLoggedInUser,
         updateLoggedInUser,
         checkUserIsLoggedIn,
+        currency,
+        setCurrency,
       }}
     >
       <Toaster />
